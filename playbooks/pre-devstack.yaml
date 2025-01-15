@@ -6,6 +6,12 @@
     - ensure-output-dirs
 
 - hosts: all
+  tasks:
+  - name: debug zuul 
+    debug:
+      var: zuul
+
+- hosts: all
   pre_tasks:
     - name: Start zuul console daemon
       zuul_console:
@@ -21,9 +27,10 @@
     - install-pip3
     - ensure-output-dirs
 
-- hosts: all
-  roles:
-    - prepare-workspace
+#- hosts: all
+#  roles:
+#    - prepare-workspace
+
 - hosts: all
   pre_tasks:
     - name: Fix the permissions of the zuul home directory

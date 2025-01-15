@@ -12,6 +12,7 @@
 - job:
     name: devstack-base
     parent: dell-base
+    abstract: true
     description: |
       Base abstract Devstack job.
 
@@ -42,7 +43,7 @@
         VERBOSE: true
         VERBOSE_NO_TIMESTAMP: true
         NOVNC_FROM_PACKAGE: true
-        ERROR_ON_CLONE: true
+        ERROR_ON_CLONE: false
         # Gate jobs can't deal with nested virt. Disable it by default.
         LIBVIRT_TYPE: '{{ devstack_libvirt_type | default("qemu") }}'
       devstack_services:
@@ -110,3 +111,30 @@
       - ^.*/locale/.*po$
       # pre-commit config
       - ^.pre-commit-config.yaml$
+
+- job:
+    name: devstack-minimal
+    parent: devstack-base
+    description: |
+      Minimal devstack base job, intended for use by jobs that need
+      less than the normal minimum set of required-projects.      
+    required-projects:
+      - opendev.org/openstack/requirements
+    vars:
+      devstack_localrc:
+        # Multinode specific settings
+        SERVICE_HOST: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}"
+        HOST_IP: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}"
+        PUBLIC_BRIDGE_MTU: '{{ external_bridge_mtu }}'
+        DATABASE_TYPE: mysql
+        RABBIT_HOST: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}"
+        DATABASE_HOST: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}"
+      devstack_services:
+        # Shared services
+        dstat: false
+        etcd3: true
+        memory_tracker: true
+        file_tracker: true
+        mysql: true
+        rabbit: true
+        openstack-cli-server: true

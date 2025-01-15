@@ -2,3 +2,5 @@
   roles:
     - add-build-sshkey
     - prepare-workspace-git
+    - validate-host
+    - log-inventory

@@ -4,6 +4,10 @@
     file_type: directory
   register: found_repos
 
+- name: debug found_repos
+  debug:
+    var:  found_repos
+
 - name: Copy Zuul repos into devstack working directory
   command: rsync -a {{ item.path }} {{ devstack_base_dir }}
   with_items: '{{ found_repos.files }}'

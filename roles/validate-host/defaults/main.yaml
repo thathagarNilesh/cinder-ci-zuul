@@ -1,0 +1,4 @@
+zuul_site_image_manifest_files:
+  - /etc/dib-builddate.txt
+  - /etc/image-hostname.txt
+validate_host_hostname: "{{ inventory_hostname }}"
