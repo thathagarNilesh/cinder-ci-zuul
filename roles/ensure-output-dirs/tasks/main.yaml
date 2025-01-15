@@ -1,0 +1,22 @@
+- name: Empty Zuul Output directories by removing them
+  file:
+    path: "{{ zuul_output_dir }}/{{ zj_output_dir }}"
+    state: absent
+  with_items:
+    - logs
+    - artifacts
+    - docs
+  loop_control:
+    loop_var: zj_output_dir
+
+- name: Ensure Zuul Output directories exist
+  file:
+    path: "{{ zuul_output_dir }}/{{ zj_output_dir }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - logs
+    - artifacts
+    - docs
+  loop_control:
+    loop_var: zj_output_dir

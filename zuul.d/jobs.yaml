@@ -1,0 +1,112 @@
+- job:
+    name: dell-base
+    parent: null
+    post-run: playbooks/base/post-logs.yaml
+    roles:
+      - zuul: zuul/zuul-jobs
+    nodeset:
+      nodes:
+        - name: controller
+          label: ubuntu-jammy
+
+- job:
+    name: devstack-base
+    parent: dell-base
+    description: |
+      Base abstract Devstack job.
+
+      Defines plays and base variables, but it does not include any project
+      and it does not run any service by default. This is a common base for
+      all single Devstack jobs, single or multinode.
+      Variables are defined in job.vars, which is what is then used by single
+      node jobs and by multi node jobs for the controller, as well as in
+      job.group-vars.peers, which is what is used by multi node jobs for subnode
+      nodes (everything but the controller).      
+    required-projects:
+      - opendev.org/openstack/devstack
+    roles:
+      - zuul: opendev.org/openstack/openstack-zuul-jobs
+    vars:
+      devstack_localrc:
+        DATABASE_PASSWORD: secretdatabase
+        RABBIT_PASSWORD: secretrabbit
+        ADMIN_PASSWORD: secretadmin
+        SERVICE_PASSWORD: secretservice
+        NETWORK_GATEWAY: 10.1.0.1
+        FIXED_RANGE: 10.1.0.0/20
+        IPV4_ADDRS_SAFE_TO_USE: 10.1.0.0/20
+        FLOATING_RANGE: 172.24.5.0/24
+        PUBLIC_NETWORK_GATEWAY: 172.24.5.1
+        LOGFILE: /opt/stack/logs/devstacklog.txt
+        LOG_COLOR: false
+        VERBOSE: true
+        VERBOSE_NO_TIMESTAMP: true
+        NOVNC_FROM_PACKAGE: true
+        ERROR_ON_CLONE: true
+        # Gate jobs can't deal with nested virt. Disable it by default.
+        LIBVIRT_TYPE: '{{ devstack_libvirt_type | default("qemu") }}'
+      devstack_services:
+        # Ignore any default set by devstack. Emit a "disable_all_services".
+        base: false
+      zuul_copy_output:
+        '{{ devstack_conf_dir }}/local.conf': logs
+        '{{ devstack_conf_dir }}/localrc': logs
+        '{{ devstack_conf_dir }}/.localrc.auto': logs
+        '{{ devstack_conf_dir }}/.stackenv': logs
+        '{{ devstack_log_dir }}/dstat-csv.log': logs
+        '{{ devstack_log_dir }}/devstacklog.txt': logs
+        '{{ devstack_log_dir }}/devstacklog.txt.summary': logs
+        '{{ devstack_log_dir }}/tcpdump.pcap': logs
+        '{{ devstack_log_dir }}/worlddump-latest.txt': logs
+        '{{ devstack_log_dir }}/qemu.coredump': logs
+        '{{ devstack_full_log}}': logs
+        '{{ stage_dir }}/verify_tempest_conf.log': logs
+        '{{ stage_dir }}/performance.json': logs
+        '{{ stage_dir }}/apache': logs
+        '{{ stage_dir }}/apache_config': logs
+        '{{ stage_dir }}/etc': logs
+        /var/log/rabbitmq: logs
+        /var/log/postgresql: logs
+        /var/log/mysql: logs
+        /var/log/libvirt: logs
+        /etc/libvirt: logs
+        /etc/lvm: logs
+        /etc/sudoers: logs
+        /etc/sudoers.d: logs
+        '{{ stage_dir }}/iptables.txt': logs
+        '{{ stage_dir }}/df.txt': logs
+        '{{ stage_dir }}/pip2-freeze.txt': logs
+        '{{ stage_dir }}/pip3-freeze.txt': logs
+        '{{ stage_dir }}/dpkg-l.txt': logs
+        '{{ stage_dir }}/rpm-qa.txt': logs
+        '{{ stage_dir }}/core': logs
+        '{{ stage_dir }}/listen53.txt': logs
+        '{{ stage_dir }}/services.txt': logs
+        '{{ stage_dir }}/deprecations.log': logs
+        '{{ stage_dir }}/audit.log': logs
+        /etc/ceph: logs
+        /var/log/ceph: logs
+        /var/log/openvswitch: logs
+        /var/log/glusterfs: logs
+        /etc/glusterfs/glusterd.vol: logs
+        /etc/resolv.conf: logs
+        /var/log/unbound.log: logs
+      extensions_to_txt:
+        conf: true
+        log: true
+        localrc: true
+        stackenv: true
+        auto: true
+    pre-run: playbooks/pre-devstack.yaml
+    run: playbooks/run-devstack.yaml
+    post-run: playbooks/post-devstack.yaml
+    irrelevant-files:
+      # Documentation related
+      - ^.*\.rst$
+      - ^api-ref/.*$
+      - ^doc/.*$
+      - ^releasenotes/.*$
+      # Translations
+      - ^.*/locale/.*po$
+      # pre-commit config
+      - ^.pre-commit-config.yaml$

@@ -1,0 +1,1 @@
+Runs apt update & upgrade then installs pip3

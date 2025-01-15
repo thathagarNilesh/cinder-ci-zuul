@@ -1,0 +1,18 @@
+- project:
+    name: zuul-config
+    check:
+      jobs:
+        - noop
+
+- project:
+    name: openstack/cinder
+    check:
+      jobs:
+        - noop
+        - testjob
+
+- project:
+    name: opendev/ci-sandbox
+    check:
+      jobs:
+        - devstack-base

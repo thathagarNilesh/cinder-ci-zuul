@@ -1,0 +1,32 @@
+- pipeline:
+    name: check
+    description: |
+      Runs tests and uploads results upstream.
+    manager: independent
+    footer-message: |
+      For 3rd party CI contact info: https://wiki.openstack.org/wiki/ThirdPartySystems/
+    require:
+      openstack.gerrit:
+        current-patchset: True
+    trigger:
+      openstack.gerrit:
+        - event: change-restored
+          branch: master
+        - event: comment-added
+          branch: master
+          comment: ^\s*recheck(( (?:bug|lp)[\s#:]*(\d+))|( no bug))\s*$
+        - event: comment-added
+          branch: master
+          comment: run-DellEMC PowerFlex CI$
+        - event: comment-added
+          branch: master
+          approval:
+            - verified: 1
+    success-message: |
+      Build succeeded (check pipeline).
+    failure-message: |
+      Build failed (check pipeline).
+    success:
+      openstack.gerrit: {}
+    failure:
+      openstack.gerrit: {}

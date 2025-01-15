@@ -1,0 +1,6 @@
+- name: Install pip3
+  shell:
+    cmd: |
+      sudo apt update -y
+      sudo apt upgrade -y
+      sudo apt install python3-pip -y
