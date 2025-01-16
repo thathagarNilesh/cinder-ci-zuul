@@ -15,4 +15,4 @@
     name: opendev/ci-sandbox
     check:
       jobs:
-        - devstack-minimal
+        - devstack

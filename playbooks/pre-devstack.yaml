@@ -7,9 +7,15 @@
 
 - hosts: all
   tasks:
-  - name: debug zuul 
+  - name: debug zuul variables
     debug:
       var: zuul
+
+- hosts: all
+  tasks:
+  - name: debug ansible variables
+    debug:
+      var: vars
 
 - hosts: all
   pre_tasks:
