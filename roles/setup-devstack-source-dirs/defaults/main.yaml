@@ -1,9 +1,9 @@
 devstack_base_dir: /opt/stack
 devstack_source_dirs:
-  - /opt/stack/src/opendev.org/opendev
-  - /opt/stack/src/opendev.org/openstack
-  - /opt/stack/src/opendev.org/openstack-dev
-  - /opt/stack/src/opendev.org/openstack-infra
-  - /opt/stack/src/opendev.org/starlingx
-  - /opt/stack/src/opendev.org/x
-  - /opt/stack/src/opendev.org/zuul
+  - src/opendev.org/opendev
+  - src/opendev.org/openstack
+  - src/opendev.org/openstack-dev
+  - src/opendev.org/openstack-infra
+  - src/opendev.org/starlingx
+  - src/opendev.org/x
+  - src/opendev.org/zuul

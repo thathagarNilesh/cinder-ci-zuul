@@ -1,6 +1,20 @@
 - name: Start zuul_console daemon.
   zuul_console:
 
+- name: debug workspace variables
+  debug:
+    var: to_debug
+  vars:
+    to_debug:
+      zuul_workspace: "{{ zuul_workspace_root }}"
+      executor_src_root: "{{ zuul.executor.src_root }}"
+
+- name: debug current host
+  shell: hostname
+
+- name: debug user
+  shell: whoami
+
 - name: Synchronize src repos to workspace directory.
   synchronize:
     delete: true
@@ -9,4 +23,6 @@
     src: "{{ zuul.executor.src_root }}"
     owner: no
     group: no
+#    rsync_opts:
+#    - "-e ssh -i /root/.ssh/id_ed25519"
   no_log: false

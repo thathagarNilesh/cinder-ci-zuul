@@ -1,0 +1,5 @@
+generate_zuul_manifest_root: "{{ zuul.executor.log_root }}"
+generate_zuul_manifest_filename: "zuul-manifest.json"
+generate_zuul_manifest_output: "{{ zuul.executor.log_root }}/{{ generate_zuul_manifest_filename }}"
+generate_zuul_manifest_type: "zuul_manifest"
+generate_zuul_manifest_index_links: False
