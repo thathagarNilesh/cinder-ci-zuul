@@ -1,10 +1,10 @@
 - pipeline:
-    name: check
+    name: dell-emc-powerflex-ci-check
     description: |
-      Runs tests and uploads results upstream.
+      Runs tests and uploads results upstream for Dell EMC PowerFlex backend
     manager: independent
     footer-message: |
-      For 3rd party CI contact info: https://wiki.openstack.org/wiki/ThirdPartySystems/
+      For 3rd party CI contact info: https://wiki.openstack.org/wiki/ThirdPartySystems/DellEMC_PowerFlex_CI
     require:
       openstack.gerrit:
         current-patchset: True
@@ -18,6 +18,73 @@
         - event: comment-added
           branch: master
           comment: run-DellEMC PowerFlex CI$
+        - event: comment-added
+          branch: master
+          approval:
+            - verified: 1
+    success-message: |
+      Build succeeded (check pipeline).
+    failure-message: |
+      Build failed (check pipeline).
+    success:
+      openstack.gerrit: {}
+    failure:
+      openstack.gerrit: {}
+
+
+- pipeline:
+    name: dell-emc-powermax-ci-check
+    description: |
+      Runs tests and uploads results upstream for Dell EMC PowerMax backend
+    manager: independent
+    footer-message: |
+      For 3rd party CI contact info: https://wiki.openstack.org/wiki/ThirdPartySystems/DellEMC_PowerMAX_CI
+    require:
+      openstack.gerrit:
+        current-patchset: True
+    trigger:
+      openstack.gerrit:
+        - event: change-restored
+          branch: master
+        - event: comment-added
+          branch: master
+          comment: ^\s*recheck(( (?:bug|lp)[\s#:]*(\d+))|( no bug))\s*$
+        - event: comment-added
+          branch: master
+          comment: run-DellEMC PowerMax CI$
+        - event: comment-added
+          branch: master
+          approval:
+            - verified: 1
+    success-message: |
+      Build succeeded (check pipeline).
+    failure-message: |
+      Build failed (check pipeline).
+    success:
+      openstack.gerrit: {}
+    failure:
+      openstack.gerrit: {}
+
+- pipeline:
+    name: dell-emc-powerstore-ci-check
+    description: |
+      Runs tests and uploads results upstream for Dell EMC PowerStore backend
+    manager: independent
+    footer-message: |
+      For 3rd party CI contact info: https://wiki.openstack.org/wiki/ThirdPartySystems/DellEMC_PowerStore_CI
+    require:
+      openstack.gerrit:
+        current-patchset: True
+    trigger:
+      openstack.gerrit:
+        - event: change-restored
+          branch: master
+        - event: comment-added
+          branch: master
+          comment: ^\s*recheck(( (?:bug|lp)[\s#:]*(\d+))|( no bug))\s*$
+        - event: comment-added
+          branch: master
+          comment: run-DellEMC PowerStore CI$
         - event: comment-added
           branch: master
           approval:

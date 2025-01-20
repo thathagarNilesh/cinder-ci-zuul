@@ -13,6 +13,7 @@
 
 - project:
     name: opendev/ci-sandbox
-    check:
+    dell-emc-powerflex-ci-check:
       jobs:
-        - powerflex-backend-cinder-tempest
+        - powerflex-v4-backend-cinder-tempest
+        - powerflex-v3-backend-cinder-tempest
