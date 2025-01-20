@@ -3,9 +3,9 @@
     parent: null
     pre-run: playbooks/base/pre.yaml
     post-run: 
+      - playbooks/base/post-logs.yaml
       - name: playbooks/base/cleanup.yaml
         cleanup: true
-      - playbooks/base/post-logs.yaml
     roles:
       - zuul: zuul/zuul-jobs
     nodeset:
@@ -215,11 +215,6 @@
         # virt driver.
         NOVA_LIBVIRT_TB_CACHE_SIZE: 128
         ENABLE_ZSWAP: true
-      devstack_local_conf:
-        post-config:
-          $NEUTRON_CONF:
-            DEFAULT:
-              global_physnet_mtu: '{{ external_bridge_mtu }}'
       devstack_services:
         # Core services enabled for this branch.
         # This list replaces the test-matrix.
@@ -269,3 +264,95 @@
         # Test matrix emits ceilometer but ceilomenter is not installed in the
         # integrated gate, so specifying the services has not effect.
         # ceilometer-*: false
+
+- job:
+    name: devstack-tempest
+    parent: devstack
+    description: |
+      Base Tempest job.
+
+      This Tempest job provides the base for both the single and multi-node
+      test setup. To run a multi-node test inherit from devstack-tempest and
+      set the nodeset to a multi-node one.
+    required-projects: &base_required-projects
+      - opendev.org/openstack/tempest
+    timeout: 7200
+    vars: &base_vars
+      devstack_services:
+        tempest: true
+      devstack_local_conf:
+      test_results_stage_name: test_results
+      zuul_copy_output:
+        '{{ devstack_base_dir }}/tempest/etc/tempest.conf': logs
+        '{{ devstack_base_dir }}/tempest/etc/accounts.yaml': logs
+        '{{ devstack_base_dir }}/tempest/tempest.log': logs
+        '{{ stage_dir }}/{{ test_results_stage_name }}.subunit': logs
+        '{{ stage_dir }}/{{ test_results_stage_name }}.html': logs
+        '{{ stage_dir }}/stackviz': logs
+      extensions_to_txt:
+        conf: true
+        log: true
+        yaml: true
+        yml: true
+    run: playbooks/devstack-tempest.yaml
+    post-run: playbooks/post-tempest.yaml
+
+- job:
+    name: devstack-cinder-plugin-tempest-base
+    abstract: true 
+    parent: devstack-tempest
+    description: |
+      Base tempest job with cinder plugin.
+
+      This job doesn't configure any backend but install the cinder plugin for tempest.
+    required-projects:
+      - openstack/cinder-tempest-plugin
+    irrelevant-files: &irrelevant-files
+      - ^.*\.rst$
+      - ^doc/.*$
+      - ^tox.ini$
+    timeout: 7200
+    vars:
+      tempest_concurrency: 2
+      devstack_localrc:
+        TEMPEST_PLUGINS: 'cinder-tempest-plugin'
+      devstack_services:
+        horizon: false
+      tox_envlist: all
+      tempest_test_regex: |
+        volume
+
+- job: 
+    name: powerflex-backend-cinder-tempest
+    parent: devstack-cinder-plugin-tempest-base
+    description: |
+      Runs cinder tempest plugin tests with Dell PowerFlex
+    vars:
+      devstack_localrc:
+        CINDER_ENABLED_BACKENDS: powerflex1,powerflex2
+        TEMPEST_CONCURRENCY: 2
+        TEMPEST_EXTEND_ATTACHED_VOLUME: true
+        TEMPEST_VOLUME_DRIVER: EMC
+        TEMPEST_VOLUME_VENDOR: 'Dell EMC'
+        TEMPEST_STORAGE_PROTOCOL: scaleio
+        ENABLE_VOLUME_MULTIATTACH: true
+      devstack_local_conf:
+        post-config:
+          $CINDER_CONF:
+            powerflex1:
+              volume_backend_name: powerflex1
+            powerflex2:
+              volume_backend_name: powerflex1
+            backend_defaults:
+              suppress_requests_ssl_warnings: True
+              volume_driver: cinder.volume.drivers.dell_emc.powermax.iscsi.PowerFlexDriver
+              image_volume_cache_enabled: True
+              san_ip: 10.228.225.213
+              san_login: adminc
+              san_password: #1Danger0us
+              powerflex_storage_pools: OpenstackPD:OpenstackSP0
+          $NOVA_CONF:
+            libvirt:
+              volume_use_multipath: True
+      tempest_test_regex: |
+        volume|^cinder_tempest_plugin 

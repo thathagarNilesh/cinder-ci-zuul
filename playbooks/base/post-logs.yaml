@@ -1,6 +1,7 @@
 - hosts: all
   roles:
-    - fetch-output
+    - role: fetch-output
+      zuul_output_dir: "{{ ansible_user_dir }}"
     - merge-output-to-logs
 
 - hosts: localhost

@@ -1,13 +1,28 @@
+- name: debug all variables from zuul
+  debug:
+    var: zuul
+
+- name: debug all variables from ansible
+  debug:
+    var: ansible
+
 - name: debug some variables
   debug:
     var: to_debug
   vars:
     to_debug:
-      service_host: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}"
-      host_ip: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}"
-      public_bridge_mtu: '{{ external_bridge_mtu }}'
-      rabbit_host: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}"
-      database_host: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}"
+      path: "{{ devstack_local_conf_path }}"
+      plugins: "{{ devstack_plugins|default(omit) }}"
+      base_services: "{{ devstack_base_services|default(omit) }}"
+      services: "{{ devstack_services|default(omit) }}"
+      localrc: "{{ devstack_localrc|default(omit) }}"
+      local_conf: "{{ devstack_local_conf|default(omit) }}"
+      base_dir: "{{ devstack_base_dir|default(omit) }}"
+      projects: "{{ zuul.projects }}"
+      project: "{{ zuul.project }}"
+      tempest_plugins: "{{ tempest_plugins|default(omit) }}"
+
+
 
 - name: Write a job-specific local_conf file
   become: true

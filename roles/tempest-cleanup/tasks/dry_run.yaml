@@ -1,0 +1,26 @@
+---
+- name: Run tempest cleanup dry-run
+  become: yes
+  become_user: tempest
+  command: tox -evenv-tempest -- tempest cleanup --dry-run --debug
+  args:
+    chdir: "{{ devstack_base_dir }}/tempest"
+  when:
+    - not run_tempest_cleanup_prefix
+    - run_tempest_cleanup_resource_list is not defined or not run_tempest_cleanup_resource_list
+
+- name: Run tempest cleanup dry-run with tempest prefix
+  become: yes
+  become_user: tempest
+  command: tox -evenv-tempest -- tempest cleanup --dry-run --debug --prefix tempest
+  args:
+    chdir: "{{ devstack_base_dir }}/tempest"
+  when: run_tempest_cleanup_prefix
+
+- name: Run tempest cleanup with tempest resource list
+  become: yes
+  become_user: tempest
+  command: tox -evenv-tempest -- tempest cleanup --dry-run --debug --resource-list
+  args:
+    chdir: "{{ devstack_base_dir }}/tempest"
+  when: run_tempest_cleanup_resource_list

@@ -289,6 +289,7 @@ class LocalConf(object):
 
 
     def handle_localconf(self, localconf):
+        print("localconf is : {}", localconf)        
         for phase, phase_data in localconf.items():
             for fn, fn_data in phase_data.items():
                 ms_name = '[[{}|{}]]'.format(phase, fn)

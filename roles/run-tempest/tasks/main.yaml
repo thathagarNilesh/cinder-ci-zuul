@@ -1,0 +1,133 @@
+# NOTE(andreaf) The number of vcpus is not available on all systems.
+# See https://github.com/ansible/ansible/issues/30688
+# When not available, we fall back to ansible_processor_cores
+- name: Get hw.logicalcpu from sysctl
+  shell: sysctl hw.logicalcpu | cut -d' ' -f2
+  register: sysctl_hw_logicalcpu
+  when: ansible_processor_vcpus is not defined
+
+- name: Number of cores
+  set_fact:
+    num_cores: "{{ansible_processor_vcpus|default(sysctl_hw_logicalcpu.stdout)}}"
+
+- name: Set concurrency for cores == 3 or less
+  set_fact:
+    default_concurrency: "{{ num_cores }}"
+  when: num_cores|int <= 3
+
+- name: Limit max concurrency when more than 3 vcpus are available
+  set_fact:
+    default_concurrency: "{{ num_cores|int - 2 }}"
+  when: num_cores|int > 3
+
+- name: Override target branch
+  set_fact:
+    target_branch: "{{ zuul.override_checkout }}"
+  when: zuul.override_checkout is defined
+
+- name: Use stable branch upper-constraints till 2023.1
+  set_fact:
+    # TOX_CONSTRAINTS_FILE is new name, UPPER_CONSTRAINTS_FILE is old one, best to set both
+    tempest_tox_environment: "{{ tempest_tox_environment | combine({'UPPER_CONSTRAINTS_FILE': stable_constraints_file}) | combine({'TOX_CONSTRAINTS_FILE': stable_constraints_file}) }}"
+  when: target_branch in ["stable/ocata", "stable/pike", "stable/queens", "stable/rocky", "stable/stein", "stable/train", "stable/ussuri", "stable/2023.1", "unmaintained/victoria", "unmaintained/wallaby", "unmaintained/xena", "unmaintained/yoga", "unmaintained/zed", "unmaintained/2023.1"]
+
+- name: Use Configured upper-constraints for non-master Tempest
+  set_fact:
+    # TOX_CONSTRAINTS_FILE is new name, UPPER_CONSTRAINTS_FILE is old one, best to set both
+    tempest_tox_environment: "{{ tempest_tox_environment | combine({'UPPER_CONSTRAINTS_FILE': devstack_localrc['TEMPEST_VENV_UPPER_CONSTRAINTS']}) | combine({'TOX_CONSTRAINTS_FILE': devstack_localrc['TEMPEST_VENV_UPPER_CONSTRAINTS']}) }}"
+  when:
+    - devstack_localrc is defined
+    - "'TEMPEST_BRANCH' in devstack_localrc"
+    - "'TEMPEST_VENV_UPPER_CONSTRAINTS' in devstack_localrc"
+    - devstack_localrc['TEMPEST_BRANCH'] != 'master'
+    - devstack_localrc['TEMPEST_VENV_UPPER_CONSTRAINTS'] != 'master'
+
+- name: Set OS_TEST_TIMEOUT if requested
+  set_fact:
+    tempest_tox_environment: "{{ tempest_tox_environment | combine({'OS_TEST_TIMEOUT': tempest_test_timeout}) }}"
+  when: tempest_test_timeout != ''
+
+# TODO(kopecmartin) remove the following 'when block' after all consumers of
+# the role have switched to tempest_test_exclude_list option, until then it's
+# kept here for backward compatibility
+- when:
+    - tempest_test_blacklist is defined
+  block:
+    - name: Check for test blacklist file
+      stat:
+        path: "{{ tempest_test_blacklist }}"
+      register:
+        blacklist_stat
+
+    - name: Build blacklist option
+      set_fact:
+        blacklist_option: "--blacklist-file={{ tempest_test_blacklist|quote }}"
+      when: blacklist_stat.stat.exists
+
+- when:
+    - tempest_test_exclude_list is defined
+  block:
+    - name: Check for test exclude list file
+      stat:
+        path: "{{ tempest_test_exclude_list }}"
+      register:
+        exclude_list_stat
+
+    - name: Build exclude list option
+      set_fact:
+        exclude_list_option: "--exclude-list={{ tempest_test_exclude_list|quote }}"
+      when: exclude_list_stat.stat.exists
+
+- name: Tempest 26.1.0 workaround to fallback exclude-list to blacklist
+  # NOTE(gmann): stable/train|ussuri|victoria use Tempest 26.1.0 and with
+  # stestr 2.5.1/3.0.1 (because of upper constraints of stestr 2.5.1/3.0.1
+  # in stable/train|ussuri|victoria) which does not have new args exclude-list
+  # so let's fallback to old arg if new arg is passed.
+  set_fact:
+    exclude_list_option: "--blacklist-file={{ tempest_test_exclude_list|quote }}"
+  when:
+    - tempest_test_exclude_list is defined
+    - target_branch in ["stable/train", "stable/ussuri", "unmaintained/victoria"]
+
+# TODO(kopecmartin) remove this after all consumers of the role have switched
+# to tempest_exclude_regex option, until then it's kept here for the backward
+# compatibility
+- name: Build exclude regex (old param)
+  set_fact:
+    tempest_test_exclude_regex: "--black-regex={{tempest_black_regex|quote}}"
+  when:
+    - tempest_black_regex is defined
+    - tempest_exclude_regex is not defined
+
+- name: Build exclude regex (new param)
+  set_fact:
+    tempest_test_exclude_regex: "--exclude-regex={{tempest_exclude_regex|quote}}"
+  when:
+    - tempest_black_regex is not defined
+    - tempest_exclude_regex is defined
+    - target_branch not in ["stable/train", "stable/ussuri", "unmaintained/victoria"]
+
+- name: Tempest 26.1.0 workaround to fallback exclude-regex to black-regex
+  # NOTE(gmann): stable/train|ussuri|victoria use Tempest 26.1.0 and with stestr
+  # 2.5.1/3.0.1 (because of upper constraints of stestr 2.5.1/3.0.1 in
+  # stable/train|ussuri|victoria) which does not have new args exclude-list so
+  # let's fallback to old arg if new arg is passed.
+  set_fact:
+    tempest_test_exclude_regex: "--black-regex={{tempest_exclude_regex|quote}}"
+  when:
+    - tempest_black_regex is not defined
+    - tempest_exclude_regex is defined
+    - target_branch in ["stable/train", "stable/ussuri", "unmaintained/victoria"]
+
+- name: Run Tempest
+  command: tox -e {{tox_envlist}} {{tox_extra_args}} -- \
+           {{tempest_test_regex|quote if (tempest_test_regex|length>0)|default(None, True)}} \
+           {{blacklist_option|default(None)}}  {{exclude_list_option|default(None)}} \
+            --concurrency={{tempest_concurrency|default(default_concurrency)}} \
+           {{tempest_test_exclude_regex|default(None)}}
+  args:
+    chdir: "{{devstack_base_dir}}/tempest"
+  register: tempest_run_result
+  become: true
+  become_user: tempest
+  environment: "{{ tempest_tox_environment }}"
