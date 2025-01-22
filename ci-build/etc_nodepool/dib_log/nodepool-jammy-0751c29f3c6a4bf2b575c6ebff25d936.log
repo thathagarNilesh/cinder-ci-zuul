@@ -1,0 +1,381 @@
+2025-01-22 08:18:43.629 | diskimage-builder version 3.36.0
+2025-01-22 08:18:43.631 | Building elements: base ubuntu-minimal vm simple-init growroot cache-devstack openstack-repos nodepool-base infra-package-needs block-device-mbr
+2025-01-22 08:18:43.702 | DEBUG diskimage_builder.element_dependencies [-] ELEMENTS_PATH is: /usr/local/lib/python3.11/site-packages/diskimage_builder/elements:/etc/nodepool/elements _find_all_elements /usr/local/lib/python3.11/site-packages/diskimage_builder/element_dependencies.py:209
+2025-01-22 08:18:43.725 | Expanded element dependencies to: base vm dib-init-system cache-devstack bootloader dpkg sysprep install-bin manifests zuul-worker pkg-map install-types runtime-ssh-host-keys nodepool-base ubuntu-common debootstrap growroot simple-init openssh-server source-repositories cloud-init-datasources block-device-mbr modprobe infra-package-needs cache-url package-installs ensure-venv install-static openstack-repos ubuntu-minimal
+2025-01-22 08:18:43.730 | + diskimage_builder/lib/disk-image-create:main:255                                 :   '[' 1 = 1 ']'
+2025-01-22 08:18:43.733 | + diskimage_builder/lib/disk-image-create:main:256                                 :   export IMAGE_NAME=/etc/nodepool/dib/nodepool-jammy-0751c29f3c6a4bf2b575c6ebff25d936
+2025-01-22 08:18:43.736 | + diskimage_builder/lib/disk-image-create:main:256                                 :   IMAGE_NAME=/etc/nodepool/dib/nodepool-jammy-0751c29f3c6a4bf2b575c6ebff25d936
+2025-01-22 08:18:43.740 | + diskimage_builder/lib/disk-image-create:main:260                                 :   for X in ${!IMAGE_TYPES[@]}
+2025-01-22 08:18:43.743 | + diskimage_builder/lib/disk-image-create:main:261                                 :   case "${IMAGE_TYPES[$X]}" in
+2025-01-22 08:18:43.745 | + diskimage_builder/lib/disk-image-create:main:263                                 :   type qemu-img
+2025-01-22 08:18:43.748 | + diskimage_builder/lib/disk-image-create:main:299                                 :   type fstrim
+2025-01-22 08:18:43.751 | + diskimage_builder/lib/disk-image-create:main:307                                 :   [[ -n '' ]]
+2025-01-22 08:18:43.754 | + diskimage_builder/lib/disk-image-create:main:314                                 :   mk_build_dir
+2025-01-22 08:18:43.756 | ++ diskimage_builder/lib/common-functions:mk_build_dir:37                           :   mktemp -t -d --tmpdir=/tmp dib_build.XXXXXXXX
+2025-01-22 08:18:43.760 | + diskimage_builder/lib/common-functions:mk_build_dir:37                           :   TMP_BUILD_DIR=/root/dib_build.3EXO5Tyw
+2025-01-22 08:18:43.764 | ++ diskimage_builder/lib/common-functions:mk_build_dir:38                           :   mktemp -t -d --tmpdir=/tmp dib_image.XXXXXXXX
+2025-01-22 08:18:43.768 | + diskimage_builder/lib/common-functions:mk_build_dir:38                           :   TMP_IMAGE_DIR=/root/dib_image.73w4wAzr
+2025-01-22 08:18:43.771 | + diskimage_builder/lib/common-functions:mk_build_dir:39                           :   '[' 0 -eq 0 ']'
+2025-01-22 08:18:43.773 | + diskimage_builder/lib/common-functions:mk_build_dir:40                           :   export TMP_BUILD_DIR
+2025-01-22 08:18:43.776 | + diskimage_builder/lib/common-functions:mk_build_dir:41                           :   tmpfs_check
+2025-01-22 08:18:43.778 | + diskimage_builder/lib/common-functions:tmpfs_check:22                            :   local echo_message=1
+2025-01-22 08:18:43.781 | + diskimage_builder/lib/common-functions:tmpfs_check:23                            :   '[' 1 == 0 ']'
+2025-01-22 08:18:43.784 | + diskimage_builder/lib/common-functions:tmpfs_check:23                            :   return 1
+2025-01-22 08:18:43.787 | + diskimage_builder/lib/common-functions:mk_build_dir:46                           :   trap trap_cleanup EXIT
+2025-01-22 08:18:43.790 | + diskimage_builder/lib/common-functions:mk_build_dir:47                           :   echo Building in /root/dib_build.3EXO5Tyw
+2025-01-22 08:18:43.790 | Building in /root/dib_build.3EXO5Tyw
+2025-01-22 08:18:43.793 | + diskimage_builder/lib/common-functions:mk_build_dir:48                           :   export TMP_IMAGE_DIR
+2025-01-22 08:18:43.796 | + diskimage_builder/lib/common-functions:mk_build_dir:49                           :   export OUT_IMAGE_PATH=
+2025-01-22 08:18:43.799 | + diskimage_builder/lib/common-functions:mk_build_dir:49                           :   OUT_IMAGE_PATH=
+2025-01-22 08:18:43.802 | + diskimage_builder/lib/common-functions:mk_build_dir:50                           :   export TMP_HOOKS_PATH=/root/dib_build.3EXO5Tyw/hooks
+2025-01-22 08:18:43.804 | + diskimage_builder/lib/common-functions:mk_build_dir:50                           :   TMP_HOOKS_PATH=/root/dib_build.3EXO5Tyw/hooks
+2025-01-22 08:18:43.808 | + diskimage_builder/lib/disk-image-create:main:318                                 :   mkdir -p /root/dib_build.3EXO5Tyw/block-device
+2025-01-22 08:18:43.812 | + diskimage_builder/lib/disk-image-create:main:319                                 :   BLOCK_DEVICE_CONFIG_YAML=/root/dib_build.3EXO5Tyw/block-device/config.yaml
+2025-01-22 08:18:43.814 | + diskimage_builder/lib/disk-image-create:main:320                                 :   block_device_create_config_file /root/dib_build.3EXO5Tyw/block-device/config.yaml
+2025-01-22 08:18:43.829 | Searching elements for block-device[-amd64].yaml ...
+2025-01-22 08:18:43.833 | Using block-device config: /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/block-device-mbr/block-device-default.yaml
+2025-01-22 08:18:43.836 | + diskimage_builder/lib/common-functions:block_device_create_config_file:516       :   return
+2025-01-22 08:18:43.839 | + diskimage_builder/lib/disk-image-create:main:323                                 :   DIB_BLOCK_DEVICE_PARAMS_YAML=/root/dib_build.3EXO5Tyw/block-device/params.yaml
+2025-01-22 08:18:43.842 | + diskimage_builder/lib/disk-image-create:main:324                                 :   export DIB_BLOCK_DEVICE_PARAMS_YAML
+2025-01-22 08:18:43.845 | + diskimage_builder/lib/disk-image-create:main:325                                 :   cat
+2025-01-22 08:18:43.849 | + diskimage_builder/lib/disk-image-create:main:334                                 :   /usr/local/bin/python /usr/local/lib/python3.11/site-packages/diskimage_builder/lib/dib-block-device.py init
+2025-01-22 08:18:44.078 | DEBUG diskimage_builder.block_device.blockdevice [-] Creating BlockDevice object __init__ /usr/local/lib/python3.11/site-packages/diskimage_builder/block_device/blockdevice.py:229
+2025-01-22 08:18:44.078 | DEBUG diskimage_builder.block_device.blockdevice [-] Params [{'config': '/root/dib_build.3EXO5Tyw/block-device/config.yaml', 'image-dir': '/root/dib_image.73w4wAzr', 'root-fs-type': 'ext4', 'root-label': None, 'mount-base': '/root/dib_build.3EXO5Tyw/mnt', 'build-dir': '/root/dib_build.3EXO5Tyw'}] __init__ /usr/local/lib/python3.11/site-packages/diskimage_builder/block_device/blockdevice.py:232
+2025-01-22 08:18:44.081 | DEBUG diskimage_builder.block_device.blockdevice [-] Config before merge [[{'local_loop': {'name': 'image0'}}, {'partitioning': {'base': 'image0', 'label': 'mbr', 'partitions': [{'name': 'root', 'flags': ['boot', 'primary'], 'size': '100%', 'mkfs': {'mount': {'mount_point': '/', 'fstab': {'options': 'defaults', 'fsck-passno': 1}}}}]}}]] cmd_init /usr/local/lib/python3.11/site-packages/diskimage_builder/block_device/blockdevice.py:260
+2025-01-22 08:18:44.081 | DEBUG diskimage_builder.block_device.blockdevice [-] Config before merge [[{'local_loop': {'name': 'image0'}}, {'fstab': {'base': 'mount_mkfs_root', 'name': 'fstab_mount_mkfs_root', 'options': 'defaults', 'fsck-passno': 1}}, {'mount': {'base': 'mkfs_root', 'name': 'mount_mkfs_root', 'mount_point': '/'}}, {'mkfs': {'base': 'root', 'name': 'mkfs_root'}}, {'partitioning': {'base': 'image0', 'name': 'partitioning_image0', 'label': 'mbr', 'partitions': [{'name': 'root', 'flags': ['boot', 'primary'], 'size': '100%', 'base': 'image0'}]}}]] cmd_init /usr/local/lib/python3.11/site-packages/diskimage_builder/block_device/blockdevice.py:262
+2025-01-22 08:18:44.081 | DEBUG diskimage_builder.block_device.blockdevice [-] Final config [[{'local_loop': {'name': 'image0'}}, {'fstab': {'base': 'mount_mkfs_root', 'name': 'fstab_mount_mkfs_root', 'options': 'defaults', 'fsck-passno': 1}}, {'mount': {'base': 'mkfs_root', 'name': 'mount_mkfs_root', 'mount_point': '/'}}, {'mkfs': {'base': 'root', 'name': 'mkfs_root', 'type': 'ext4', 'label': 'cloudimg-rootfs'}}, {'partitioning': {'base': 'image0', 'name': 'partitioning_image0', 'label': 'mbr', 'partitions': [{'name': 'root', 'flags': ['boot', 'primary'], 'size': '100%', 'base': 'image0'}]}}]] cmd_init /usr/local/lib/python3.11/site-packages/diskimage_builder/block_device/blockdevice.py:264
+2025-01-22 08:18:44.081 | INFO diskimage_builder.block_device.blockdevice [-] Wrote final block device config to [/root/dib_build.3EXO5Tyw/states/block-device/config.json]
+2025-01-22 08:18:44.118 | ++ diskimage_builder/lib/disk-image-create:main:338                                 :   /usr/local/bin/python /usr/local/lib/python3.11/site-packages/diskimage_builder/lib/dib-block-device.py getval root-label
+2025-01-22 08:18:44.351 | DEBUG diskimage_builder.block_device.blockdevice [-] Creating BlockDevice object __init__ /usr/local/lib/python3.11/site-packages/diskimage_builder/block_device/blockdevice.py:229
+2025-01-22 08:18:44.352 | DEBUG diskimage_builder.block_device.blockdevice [-] Params [{'config': '/root/dib_build.3EXO5Tyw/block-device/config.yaml', 'image-dir': '/root/dib_image.73w4wAzr', 'root-fs-type': 'ext4', 'root-label': None, 'mount-base': '/root/dib_build.3EXO5Tyw/mnt', 'build-dir': '/root/dib_build.3EXO5Tyw'}] __init__ /usr/local/lib/python3.11/site-packages/diskimage_builder/block_device/blockdevice.py:232
+2025-01-22 08:18:44.352 | INFO diskimage_builder.block_device.blockdevice [-] Getting value for [root-label]
+2025-01-22 08:18:44.352 | DEBUG diskimage_builder.block_device.blockdevice [-] root-label [cloudimg-rootfs] cmd_getval /usr/local/lib/python3.11/site-packages/diskimage_builder/block_device/blockdevice.py:308
+2025-01-22 08:18:44.386 | + diskimage_builder/lib/disk-image-create:main:338                                 :   DIB_ROOT_LABEL=cloudimg-rootfs
+2025-01-22 08:18:44.391 | + diskimage_builder/lib/disk-image-create:main:339                                 :   export DIB_ROOT_LABEL
+2025-01-22 08:18:44.397 | ++ diskimage_builder/lib/disk-image-create:main:342                                 :   /usr/local/bin/python /usr/local/lib/python3.11/site-packages/diskimage_builder/lib/dib-block-device.py getval root-fstype
+2025-01-22 08:18:44.629 | DEBUG diskimage_builder.block_device.blockdevice [-] Creating BlockDevice object __init__ /usr/local/lib/python3.11/site-packages/diskimage_builder/block_device/blockdevice.py:229
+2025-01-22 08:18:44.629 | DEBUG diskimage_builder.block_device.blockdevice [-] Params [{'config': '/root/dib_build.3EXO5Tyw/block-device/config.yaml', 'image-dir': '/root/dib_image.73w4wAzr', 'root-fs-type': 'ext4', 'root-label': None, 'mount-base': '/root/dib_build.3EXO5Tyw/mnt', 'build-dir': '/root/dib_build.3EXO5Tyw'}] __init__ /usr/local/lib/python3.11/site-packages/diskimage_builder/block_device/blockdevice.py:232
+2025-01-22 08:18:44.629 | INFO diskimage_builder.block_device.blockdevice [-] Getting value for [root-fstype]
+2025-01-22 08:18:44.629 | DEBUG diskimage_builder.block_device.blockdevice [-] root-fstype [ext4] cmd_getval /usr/local/lib/python3.11/site-packages/diskimage_builder/block_device/blockdevice.py:315
+2025-01-22 08:18:44.664 | + diskimage_builder/lib/disk-image-create:main:342                                 :   DIB_ROOT_FSTYPE=ext4
+2025-01-22 08:18:44.667 | + diskimage_builder/lib/disk-image-create:main:343                                 :   export DIB_ROOT_FSTYPE
+2025-01-22 08:18:44.671 | ++ diskimage_builder/lib/disk-image-create:main:347                                 :   /usr/local/bin/python /usr/local/lib/python3.11/site-packages/diskimage_builder/lib/dib-block-device.py getval boot-label
+2025-01-22 08:18:44.906 | DEBUG diskimage_builder.block_device.blockdevice [-] Creating BlockDevice object __init__ /usr/local/lib/python3.11/site-packages/diskimage_builder/block_device/blockdevice.py:229
+2025-01-22 08:18:44.906 | DEBUG diskimage_builder.block_device.blockdevice [-] Params [{'config': '/root/dib_build.3EXO5Tyw/block-device/config.yaml', 'image-dir': '/root/dib_image.73w4wAzr', 'root-fs-type': 'ext4', 'root-label': None, 'mount-base': '/root/dib_build.3EXO5Tyw/mnt', 'build-dir': '/root/dib_build.3EXO5Tyw'}] __init__ /usr/local/lib/python3.11/site-packages/diskimage_builder/block_device/blockdevice.py:232
+2025-01-22 08:18:44.906 | INFO diskimage_builder.block_device.blockdevice [-] Getting value for [boot-label]
+2025-01-22 08:18:44.906 | DEBUG diskimage_builder.block_device.blockdevice [-] boot-label [] cmd_getval /usr/local/lib/python3.11/site-packages/diskimage_builder/block_device/blockdevice.py:329
+2025-01-22 08:18:44.945 | + diskimage_builder/lib/disk-image-create:main:347                                 :   DIB_BOOT_LABEL=
+2025-01-22 08:18:44.948 | + diskimage_builder/lib/disk-image-create:main:348                                 :   export DIB_BOOT_LABEL
+2025-01-22 08:18:44.952 | ++ diskimage_builder/lib/disk-image-create:main:351                                 :   /usr/local/bin/python /usr/local/lib/python3.11/site-packages/diskimage_builder/lib/dib-block-device.py getval mount-points
+2025-01-22 08:18:45.186 | DEBUG diskimage_builder.block_device.blockdevice [-] Creating BlockDevice object __init__ /usr/local/lib/python3.11/site-packages/diskimage_builder/block_device/blockdevice.py:229
+2025-01-22 08:18:45.186 | DEBUG diskimage_builder.block_device.blockdevice [-] Params [{'config': '/root/dib_build.3EXO5Tyw/block-device/config.yaml', 'image-dir': '/root/dib_image.73w4wAzr', 'root-fs-type': 'ext4', 'root-label': None, 'mount-base': '/root/dib_build.3EXO5Tyw/mnt', 'build-dir': '/root/dib_build.3EXO5Tyw'}] __init__ /usr/local/lib/python3.11/site-packages/diskimage_builder/block_device/blockdevice.py:232
+2025-01-22 08:18:45.186 | INFO diskimage_builder.block_device.blockdevice [-] Getting value for [mount-points]
+2025-01-22 08:18:45.222 | + diskimage_builder/lib/disk-image-create:main:351                                 :   DIB_MOUNTPOINTS=/
+2025-01-22 08:18:45.227 | + diskimage_builder/lib/disk-image-create:main:352                                 :   export DIB_MOUNTPOINTS
+2025-01-22 08:18:45.230 | + diskimage_builder/lib/disk-image-create:main:354                                 :   create_base
+2025-01-22 08:18:45.235 | + diskimage_builder/lib/common-functions:create_base:353                           :   mkdir /root/dib_build.3EXO5Tyw/mnt
+2025-01-22 08:18:45.239 | + diskimage_builder/lib/common-functions:create_base:357                           :   sudo chown root.root /root/dib_build.3EXO5Tyw/mnt
+2025-01-22 08:18:45.243 | sudo: unable to send audit message: Operation not permitted
+2025-01-22 08:18:45.245 | chown: warning: '.' should be ':': 'root.root'
+2025-01-22 08:18:45.248 | + diskimage_builder/lib/common-functions:create_base:358                           :   export TMP_MOUNT_PATH=/root/dib_build.3EXO5Tyw/mnt
+2025-01-22 08:18:45.251 | + diskimage_builder/lib/common-functions:create_base:358                           :   TMP_MOUNT_PATH=/root/dib_build.3EXO5Tyw/mnt
+2025-01-22 08:18:45.254 | + diskimage_builder/lib/common-functions:create_base:360                           :   TARGET_ROOT=/root/dib_build.3EXO5Tyw/mnt
+2025-01-22 08:18:45.257 | + diskimage_builder/lib/common-functions:create_base:360                           :   run_d root
+2025-01-22 08:18:45.260 | + diskimage_builder/lib/common-functions:run_d:246                                 :   check_element
+2025-01-22 08:18:45.263 | + diskimage_builder/lib/common-functions:check_element:154                         :   '[' -d /root/dib_build.3EXO5Tyw/hooks ']'
+2025-01-22 08:18:45.266 | + diskimage_builder/lib/common-functions:check_element:154                         :   generate_hooks
+2025-01-22 08:18:45.283 | Copying hooks for vm
+2025-01-22 08:18:45.289 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/vm/finalise.d/50-remove-bogus-udev-links
+2025-01-22 08:18:45.296 | Copying hooks for infra-package-needs
+2025-01-22 08:18:45.302 | Copying hooks /etc/nodepool/elements/infra-package-needs/post-install.d/80-enable-haveged
+2025-01-22 08:18:45.304 | Copying hooks /etc/nodepool/elements/infra-package-needs/post-install.d/80-enable-infra-services
+2025-01-22 08:18:45.305 | Copying hooks /etc/nodepool/elements/infra-package-needs/post-install.d/89-sshd
+2025-01-22 08:18:45.312 | Copying hooks /etc/nodepool/elements/infra-package-needs/pre-install.d/00-gentoo-useflags
+2025-01-22 08:18:45.318 | Copying hooks /etc/nodepool/elements/infra-package-needs/rsyslog.d/50-default.conf
+2025-01-22 08:18:45.324 | Copying hooks /etc/nodepool/elements/infra-package-needs/install.d/10-packages
+2025-01-22 08:18:45.325 | Copying hooks /etc/nodepool/elements/infra-package-needs/install.d/10-pip-packages
+2025-01-22 08:18:45.327 | Copying hooks /etc/nodepool/elements/infra-package-needs/install.d/40-install-bindep
+2025-01-22 08:18:45.329 | Copying hooks /etc/nodepool/elements/infra-package-needs/install.d/40-install-tox
+2025-01-22 08:18:45.330 | Copying hooks /etc/nodepool/elements/infra-package-needs/install.d/89-rsyslog
+2025-01-22 08:18:45.340 | Copying hooks for install-bin
+2025-01-22 08:18:45.345 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/install-bin/pre-install.d/01-install-bin
+2025-01-22 08:18:45.350 | Copying hooks for source-repositories
+2025-01-22 08:18:45.356 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/source-repositories/extra-data.d/98-source-repositories
+2025-01-22 08:18:45.366 | Copying hooks for package-installs
+2025-01-22 08:18:45.372 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/package-installs/bin/package-installs
+2025-01-22 08:18:45.374 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/package-installs/bin/package-installs-squash
+2025-01-22 08:18:45.375 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/package-installs/bin/package-installs-v2
+2025-01-22 08:18:45.377 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/package-installs/bin/package-uninstalls
+2025-01-22 08:18:45.381 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/package-installs/extra-data.d/99-squash-package-install
+2025-01-22 08:18:45.386 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/package-installs/install.d/01-package-installs
+2025-01-22 08:18:45.388 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/package-installs/install.d/99-package-uninstalls
+2025-01-22 08:18:45.392 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/package-installs/post-install.d/00-package-installs
+2025-01-22 08:18:45.394 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/package-installs/post-install.d/95-package-uninstalls
+2025-01-22 08:18:45.399 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/package-installs/pre-install.d/10-package-installs
+2025-01-22 08:18:45.401 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/package-installs/pre-install.d/99-package-uninstalls
+2025-01-22 08:18:45.408 | Copying hooks for debootstrap
+2025-01-22 08:18:45.415 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/debootstrap/cleanup.d/99-clean-up-cache
+2025-01-22 08:18:45.420 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/debootstrap/environment.d/10-debootstrap-default-locale
+2025-01-22 08:18:45.422 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/debootstrap/environment.d/20-network-interface-names
+2025-01-22 08:18:45.426 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/debootstrap/install.d/10-debian-networking
+2025-01-22 08:18:45.427 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/debootstrap/install.d/12-debian-locale-gen
+2025-01-22 08:18:45.429 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/debootstrap/install.d/15-cleanup-debootstrap
+2025-01-22 08:18:45.436 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/debootstrap/root.d/08-debootstrap
+2025-01-22 08:18:45.446 | Copying hooks for ubuntu-common
+2025-01-22 08:18:45.451 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/ubuntu-common/environment.d/10-ubuntu-distro-name.bash
+2025-01-22 08:18:45.452 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/ubuntu-common/environment.d/11-ubuntu-init-system.bash
+2025-01-22 08:18:45.458 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/ubuntu-common/install.d/80-disable-rfc3041
+2025-01-22 08:18:45.463 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/ubuntu-common/post-install.d/99-autoremove
+2025-01-22 08:18:45.469 | Copying hooks for cloud-init-datasources
+2025-01-22 08:18:45.474 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/cloud-init-datasources/install.d/05-set-cloud-init-sources
+2025-01-22 08:18:45.479 | Copying hooks for ensure-venv
+2025-01-22 08:18:45.488 | Copying hooks for modprobe
+2025-01-22 08:18:45.493 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/modprobe/extra-data.d/50-modprobe-blacklist
+2025-01-22 08:18:45.498 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/modprobe/install.d/80-modprobe-blacklist
+2025-01-22 08:18:45.502 | Copying hooks for base
+2025-01-22 08:18:45.507 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/base/environment.d/10-base-defaults
+2025-01-22 08:18:45.512 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/base/install.d/00-baseline-environment
+2025-01-22 08:18:45.513 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/base/install.d/00-up-to-date
+2025-01-22 08:18:45.515 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/base/install.d/10-cloud-init
+2025-01-22 08:18:45.520 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/base/pre-install.d/03-baseline-tools
+2025-01-22 08:18:45.527 | Copying hooks for ubuntu-minimal
+2025-01-22 08:18:45.532 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/ubuntu-minimal/environment.d/11-ubuntu-kernel.bash
+2025-01-22 08:18:45.533 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/ubuntu-minimal/environment.d/12-ubuntu-repo-dists.bash
+2025-01-22 08:18:45.538 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/ubuntu-minimal/root.d/75-ubuntu-minimal-baseinstall
+2025-01-22 08:18:45.544 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/ubuntu-minimal/test-elements/bionic-arm64-build-succeeds
+2025-01-22 08:18:45.546 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/ubuntu-minimal/test-elements/bionic-build-succeeds
+2025-01-22 08:18:45.548 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/ubuntu-minimal/test-elements/focal-arm64-build-succeeds
+2025-01-22 08:18:45.549 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/ubuntu-minimal/test-elements/focal-build-succeeds
+2025-01-22 08:18:45.552 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/ubuntu-minimal/test-elements/jammy-arm64-build-succeeds
+2025-01-22 08:18:45.554 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/ubuntu-minimal/test-elements/noble-arm64-build-succeeds
+2025-01-22 08:18:45.555 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/ubuntu-minimal/test-elements/trusty-build-succeeds
+2025-01-22 08:18:45.557 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/ubuntu-minimal/test-elements/xenial-build-succeeds
+2025-01-22 08:18:45.567 | Copying hooks for block-device-mbr
+2025-01-22 08:18:45.572 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/block-device-mbr/environment.d/15-block-device.bash
+2025-01-22 08:18:45.581 | Copying hooks for install-types
+2025-01-22 08:18:45.586 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/install-types/extra-data.d/99-enable-install-types
+2025-01-22 08:18:45.591 | Copying hooks for openssh-server
+2025-01-22 08:18:45.596 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/openssh-server/post-install.d/80-enable-sshd-service
+2025-01-22 08:18:45.598 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/openssh-server/post-install.d/99-harden-sshd-config
+2025-01-22 08:18:45.606 | Copying hooks for bootloader
+2025-01-22 08:18:45.611 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/bootloader/environment.d/10-bootloader-default-cmdline
+2025-01-22 08:18:45.615 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/bootloader/finalise.d/50-bootloader
+2025-01-22 08:18:45.622 | Copying hooks for manifests
+2025-01-22 08:18:45.627 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/manifests/cleanup.d/01-copy-manifests-dir
+2025-01-22 08:18:45.632 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/manifests/environment.d/14-manifests
+2025-01-22 08:18:45.636 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/manifests/extra-data.d/20-manifest-dir
+2025-01-22 08:18:45.641 | Copying hooks for openstack-repos
+2025-01-22 08:18:45.646 | Copying hooks /etc/nodepool/elements/openstack-repos/extra-data.d/50-create-repo-list
+2025-01-22 08:18:45.653 | Copying hooks for sysprep
+2025-01-22 08:18:45.658 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/sysprep/bin/extract-image
+2025-01-22 08:18:45.662 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/sysprep/finalise.d/99-clear-machine-id
+2025-01-22 08:18:45.668 | Copying hooks for dib-init-system
+2025-01-22 08:18:45.672 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/dib-init-system/environment.d/99-dib-init-system
+2025-01-22 08:18:45.677 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/dib-init-system/install.d/20-install-init-scripts
+2025-01-22 08:18:45.681 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/dib-init-system/post-install.d/10-enable-init-scripts
+2025-01-22 08:18:45.686 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/dib-init-system/pre-install.d/04-dib-init-system
+2025-01-22 08:18:45.691 | Copying hooks for install-static
+2025-01-22 08:18:45.697 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/install-static/install.d/10-install-static-files
+2025-01-22 08:18:45.705 | Copying hooks for cache-devstack
+2025-01-22 08:18:45.720 | Copying hooks for cache-url
+2025-01-22 08:18:45.725 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/cache-url/bin/cache-url
+2025-01-22 08:18:45.736 | Copying hooks for dpkg
+2025-01-22 08:18:45.740 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/dpkg/bin/install-packages
+2025-01-22 08:18:45.745 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/dpkg/cleanup.d/40-unblock-daemons
+2025-01-22 08:18:45.747 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/dpkg/cleanup.d/50-remove-img-build-proxy
+2025-01-22 08:18:45.748 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/dpkg/cleanup.d/60-untrim-dpkg
+2025-01-22 08:18:45.753 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/dpkg/environment.d/10-dpkg.bash
+2025-01-22 08:18:45.757 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/dpkg/finalise.d/99-clean-up-cache
+2025-01-22 08:18:45.759 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/dpkg/finalise.d/99-write-dpkg-manifest
+2025-01-22 08:18:45.764 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/dpkg/pre-install.d/00-disable-apt-recommends
+2025-01-22 08:18:45.765 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/dpkg/pre-install.d/99-apt-get-update
+2025-01-22 08:18:45.770 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/dpkg/root.d/09-apt-keyring
+2025-01-22 08:18:45.772 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/dpkg/root.d/50-block-apt-translations
+2025-01-22 08:18:45.773 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/dpkg/root.d/50-block-daemons
+2025-01-22 08:18:45.775 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/dpkg/root.d/50-build-with-http-cache
+2025-01-22 08:18:45.776 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/dpkg/root.d/50-shared-apt-cache
+2025-01-22 08:18:45.778 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/dpkg/root.d/50-trim-dpkg
+2025-01-22 08:18:45.784 | Copying hooks for nodepool-base
+2025-01-22 08:18:45.788 | Copying hooks /etc/nodepool/elements/nodepool-base/pre-install.d/10-preseed
+2025-01-22 08:18:45.793 | Copying hooks /etc/nodepool/elements/nodepool-base/cleanup.d/50-root
+2025-01-22 08:18:45.798 | Copying hooks /etc/nodepool/elements/nodepool-base/root.d/50-apt-allow-unauthenticated
+2025-01-22 08:18:45.803 | Copying hooks /etc/nodepool/elements/nodepool-base/environment.d/75-nodepool-base-env
+2025-01-22 08:18:45.808 | Copying hooks /etc/nodepool/elements/nodepool-base/finalise.d/89-boot-settings
+2025-01-22 08:18:45.810 | Copying hooks /etc/nodepool/elements/nodepool-base/finalise.d/89-glean
+2025-01-22 08:18:45.812 | Copying hooks /etc/nodepool/elements/nodepool-base/finalise.d/89-journald-persistent
+2025-01-22 08:18:45.814 | Copying hooks /etc/nodepool/elements/nodepool-base/finalise.d/99-nodepool-dir
+2025-01-22 08:18:45.819 | Copying hooks /etc/nodepool/elements/nodepool-base/glean@.service.d/override.conf
+2025-01-22 08:18:45.824 | Copying hooks /etc/nodepool/elements/nodepool-base/install.d/05-record-details
+2025-01-22 08:18:45.826 | Copying hooks /etc/nodepool/elements/nodepool-base/install.d/06-record-builddate
+2025-01-22 08:18:45.827 | Copying hooks /etc/nodepool/elements/nodepool-base/install.d/20-iptables
+2025-01-22 08:18:45.829 | Copying hooks /etc/nodepool/elements/nodepool-base/install.d/50-disable-metadata-cloudinit
+2025-01-22 08:18:45.830 | Copying hooks /etc/nodepool/elements/nodepool-base/install.d/91-venv-os-testr
+2025-01-22 08:18:45.831 | Copying hooks /etc/nodepool/elements/nodepool-base/install.d/96-clean-cron
+2025-01-22 08:18:45.833 | Copying hooks /etc/nodepool/elements/nodepool-base/install.d/99-disable-rfc3041
+2025-01-22 08:18:45.837 | Copying hooks /etc/nodepool/elements/nodepool-base/post-install.d/20-iptables
+2025-01-22 08:18:45.839 | Copying hooks /etc/nodepool/elements/nodepool-base/post-install.d/89-data-files
+2025-01-22 08:18:45.847 | Copying hooks for growroot
+2025-01-22 08:18:45.853 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/growroot/init-scripts/openrc
+2025-01-22 08:18:45.855 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/growroot/init-scripts/systemd
+2025-01-22 08:18:45.857 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/growroot/init-scripts/upstart
+2025-01-22 08:18:45.862 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/growroot/post-install.d/80-growroot
+2025-01-22 08:18:45.868 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/growroot/static/usr
+2025-01-22 08:18:45.878 | Copying hooks for runtime-ssh-host-keys
+2025-01-22 08:18:45.882 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/runtime-ssh-host-keys/cleanup.d/90-remove-ssh-host-keys
+2025-01-22 08:18:45.887 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/runtime-ssh-host-keys/init-scripts/systemd
+2025-01-22 08:18:45.889 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/runtime-ssh-host-keys/init-scripts/upstart
+2025-01-22 08:18:45.893 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/runtime-ssh-host-keys/post-install.d/80-ssh-keygen
+2025-01-22 08:18:45.897 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/runtime-ssh-host-keys/static/usr
+2025-01-22 08:18:45.907 | Copying hooks for simple-init
+2025-01-22 08:18:45.912 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/simple-init/environment.d/15-simple-init-networkmanager
+2025-01-22 08:18:45.914 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/simple-init/environment.d/50-disable-cloud-init
+2025-01-22 08:18:45.918 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/simple-init/install.d/50-simple-init
+2025-01-22 08:18:45.919 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/simple-init/install.d/60-simple-init-remove-interfaces
+2025-01-22 08:18:45.921 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/simple-init/install.d/simple-init-package-install
+2025-01-22 08:18:45.922 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/simple-init/install.d/simple-init-repo-install
+2025-01-22 08:18:45.924 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/simple-init/install.d/simple-init-source-install
+2025-01-22 08:18:45.929 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/simple-init/post-install.d/80-simple-init
+2025-01-22 08:18:45.939 | Copying hooks for pkg-map
+2025-01-22 08:18:45.944 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/pkg-map/bin/pkg-map
+2025-01-22 08:18:45.950 | Copying hooks /usr/local/lib/python3.11/site-packages/diskimage_builder/elements/pkg-map/extra-data.d/10-create-pkg-map-dir
+2025-01-22 08:18:45.956 | Copying hooks for zuul-worker
+2025-01-22 08:18:45.960 | Copying hooks /etc/nodepool/elements/zuul-worker/extra-data.d/60-zuul-user
+2025-01-22 08:18:45.965 | Copying hooks /etc/nodepool/elements/zuul-worker/install.d/60-zuul-worker
+2025-01-22 08:18:45.975 | + diskimage_builder/lib/common-functions:run_d:247                                 :   check_break before-root bash
+2025-01-22 08:18:45.978 | + diskimage_builder/lib/common-functions:check_break:143                           :   egrep -e '(,|^)before-root(,|$)' -q
+2025-01-22 08:18:45.980 | + diskimage_builder/lib/common-functions:check_break:143                           :   echo ''
+2025-01-22 08:18:45.984 | + diskimage_builder/lib/common-functions:run_d:248                                 :   '[' -d /root/dib_build.3EXO5Tyw/hooks/root.d ']'
+2025-01-22 08:18:45.987 | + diskimage_builder/lib/common-functions:run_d:249                                 :   echo 'Running hooks from /root/dib_build.3EXO5Tyw/hooks/root.d'
+2025-01-22 08:18:45.987 | Running hooks from /root/dib_build.3EXO5Tyw/hooks/root.d
+2025-01-22 08:18:45.990 | + diskimage_builder/lib/common-functions:run_d:250                                 :   '[' -n '' ']'
+2025-01-22 08:18:45.994 | + diskimage_builder/lib/common-functions:run_d:256                                 :   /usr/local/lib/python3.11/site-packages/diskimage_builder/lib/dib-run-parts /root/dib_build.3EXO5Tyw/hooks/root.d
+2025-01-22 08:18:46.003 | dib-run-parts Ignoring non-executable files: 50-apt-allow-unauthenticated
+2025-01-22 08:18:46.010 | dib-run-parts Sourcing environment file /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/10-base-defaults
+2025-01-22 08:18:46.013 | + source /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/10-base-defaults
+2025-01-22 08:18:46.014 | ++ export DIB_AVOID_PACKAGES_UPDATE=0
+2025-01-22 08:18:46.014 | ++ DIB_AVOID_PACKAGES_UPDATE=0
+2025-01-22 08:18:46.014 | ++ export DIB_SKIP_BASE_PACKAGE_INSTALL=0
+2025-01-22 08:18:46.014 | ++ DIB_SKIP_BASE_PACKAGE_INSTALL=0
+2025-01-22 08:18:46.014 | dib-run-parts Sourcing environment file /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/10-bootloader-default-cmdline
+2025-01-22 08:18:46.016 | + source /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/10-bootloader-default-cmdline
+2025-01-22 08:18:46.016 | ++ export 'DIB_BOOTLOADER_DEFAULT_CMDLINE=nofb nomodeset gfxpayload=text'
+2025-01-22 08:18:46.016 | ++ DIB_BOOTLOADER_DEFAULT_CMDLINE='nofb nomodeset gfxpayload=text'
+2025-01-22 08:18:46.016 | ++ export DIB_BOOTLOADER_SERIAL_CONSOLE=
+2025-01-22 08:18:46.016 | ++ DIB_BOOTLOADER_SERIAL_CONSOLE=
+2025-01-22 08:18:46.016 | ++ '[' '!' -v DIB_BOOTLOADER_VIRTUAL_TERMINAL ']'
+2025-01-22 08:18:46.016 | ++ export DIB_BOOTLOADER_VIRTUAL_TERMINAL=tty0
+2025-01-22 08:18:46.016 | ++ DIB_BOOTLOADER_VIRTUAL_TERMINAL=tty0
+2025-01-22 08:18:46.016 | ++ export DIB_NO_TIMER_CHECK=True
+2025-01-22 08:18:46.016 | ++ DIB_NO_TIMER_CHECK=True
+2025-01-22 08:18:46.016 | ++ export DIB_BOOTLOADER_USE_SERIAL_CONSOLE=True
+2025-01-22 08:18:46.016 | ++ DIB_BOOTLOADER_USE_SERIAL_CONSOLE=True
+2025-01-22 08:18:46.016 | ++ export DIB_SKIP_GRUB_PACKAGE_INSTALL=False
+2025-01-22 08:18:46.016 | ++ DIB_SKIP_GRUB_PACKAGE_INSTALL=False
+2025-01-22 08:18:46.016 | dib-run-parts Sourcing environment file /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/10-debootstrap-default-locale
+2025-01-22 08:18:46.018 | + source /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/10-debootstrap-default-locale
+2025-01-22 08:18:46.018 | ++ export DIB_DEBOOTSTRAP_DEFAULT_LOCALE=C.UTF-8
+2025-01-22 08:18:46.018 | ++ DIB_DEBOOTSTRAP_DEFAULT_LOCALE=C.UTF-8
+2025-01-22 08:18:46.018 | dib-run-parts Sourcing environment file /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/10-dpkg.bash
+2025-01-22 08:18:46.021 | + source /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/10-dpkg.bash
+2025-01-22 08:18:46.021 | ++ export DIB_ADD_APT_KEYS=
+2025-01-22 08:18:46.021 | ++ DIB_ADD_APT_KEYS=
+2025-01-22 08:18:46.021 | dib-run-parts Sourcing environment file /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/10-ubuntu-distro-name.bash
+2025-01-22 08:18:46.024 | + source /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/10-ubuntu-distro-name.bash
+2025-01-22 08:18:46.024 | ++ export DISTRO_NAME=ubuntu
+2025-01-22 08:18:46.024 | ++ DISTRO_NAME=ubuntu
+2025-01-22 08:18:46.024 | ++ export DIB_RELEASE=jammy
+2025-01-22 08:18:46.024 | ++ DIB_RELEASE=jammy
+2025-01-22 08:18:46.024 | ++ export DIB_DEBIAN_COMPONENTS=main,universe
+2025-01-22 08:18:46.024 | ++ DIB_DEBIAN_COMPONENTS=main,universe
+2025-01-22 08:18:46.024 | ++ export EFI_BOOT_DIR=EFI/ubuntu
+2025-01-22 08:18:46.024 | ++ EFI_BOOT_DIR=EFI/ubuntu
+2025-01-22 08:18:46.024 | ++ ARCH=amd64
+2025-01-22 08:18:46.024 | ++ [[ arm64 armhf powerpc ppc64el s390x =~ amd64 ]]
+2025-01-22 08:18:46.024 | ++ default_ubuntu_mirror=http://archive.ubuntu.com/ubuntu
+2025-01-22 08:18:46.024 | ++ export DIB_DISTRIBUTION_MIRROR=http://archive.ubuntu.com/ubuntu
+2025-01-22 08:18:46.024 | ++ DIB_DISTRIBUTION_MIRROR=http://archive.ubuntu.com/ubuntu
+2025-01-22 08:18:46.024 | dib-run-parts Sourcing environment file /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/11-ubuntu-init-system.bash
+2025-01-22 08:18:46.027 | + source /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/11-ubuntu-init-system.bash
+2025-01-22 08:18:46.028 | ++ [[ jammy == \t\r\u\s\t\y ]]
+2025-01-22 08:18:46.028 | ++ export DIB_INIT_SYSTEM=systemd
+2025-01-22 08:18:46.028 | ++ DIB_INIT_SYSTEM=systemd
+2025-01-22 08:18:46.028 | dib-run-parts Sourcing environment file /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/11-ubuntu-kernel.bash
+2025-01-22 08:18:46.030 | + source /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/11-ubuntu-kernel.bash
+2025-01-22 08:18:46.030 | ++ export DIB_UBUNTU_KERNEL=linux-image-generic
+2025-01-22 08:18:46.030 | ++ DIB_UBUNTU_KERNEL=linux-image-generic
+2025-01-22 08:18:46.030 | dib-run-parts Sourcing environment file /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/12-ubuntu-repo-dists.bash
+2025-01-22 08:18:46.032 | + source /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/12-ubuntu-repo-dists.bash
+2025-01-22 08:18:46.032 | ++ export DIB_UBUNTU_MIRROR_DISTS=updates,security,backports
+2025-01-22 08:18:46.033 | ++ DIB_UBUNTU_MIRROR_DISTS=updates,security,backports
+2025-01-22 08:18:46.033 | dib-run-parts Sourcing environment file /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/14-manifests
+2025-01-22 08:18:46.035 | + source /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/14-manifests
+2025-01-22 08:18:46.035 | ++ export DIB_MANIFEST_IMAGE_DIR=/etc/dib-manifests
+2025-01-22 08:18:46.035 | ++ DIB_MANIFEST_IMAGE_DIR=/etc/dib-manifests
+2025-01-22 08:18:46.035 | ++ export DIB_MANIFEST_SAVE_DIR=/etc/nodepool/dib/nodepool-jammy-0751c29f3c6a4bf2b575c6ebff25d936.d/
+2025-01-22 08:18:46.035 | ++ DIB_MANIFEST_SAVE_DIR=/etc/nodepool/dib/nodepool-jammy-0751c29f3c6a4bf2b575c6ebff25d936.d/
+2025-01-22 08:18:46.035 | dib-run-parts Sourcing environment file /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/15-block-device.bash
+2025-01-22 08:18:46.038 | + source /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/15-block-device.bash
+2025-01-22 08:18:46.038 | ++ [[ arm64 aarch64 =~ amd64 ]]
+2025-01-22 08:18:46.038 | ++ export DIB_BLOCK_DEVICE=mbr
+2025-01-22 08:18:46.038 | ++ DIB_BLOCK_DEVICE=mbr
+2025-01-22 08:18:46.038 | dib-run-parts Sourcing environment file /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/15-simple-init-networkmanager
+2025-01-22 08:18:46.041 | + source /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/15-simple-init-networkmanager
+2025-01-22 08:18:46.041 | ++ [[ ubuntu =~ (almalinux|centos|fedora|rocky) ]]
+2025-01-22 08:18:46.041 | ++ export DIB_SIMPLE_INIT_NETWORKMANAGER=0
+2025-01-22 08:18:46.041 | ++ DIB_SIMPLE_INIT_NETWORKMANAGER=0
+2025-01-22 08:18:46.041 | ++ [[ ubuntu == \a\l\m\a\l\i\n\u\x ]]
+2025-01-22 08:18:46.041 | ++ [[ ubuntu == \r\o\c\k\y ]]
+2025-01-22 08:18:46.041 | ++ [[ ubuntu == \f\e\d\o\r\a ]]
+2025-01-22 08:18:46.042 | dib-run-parts Sourcing environment file /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/20-network-interface-names
+2025-01-22 08:18:46.043 | + source /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/20-network-interface-names
+2025-01-22 08:18:46.043 | ++ export 'DIB_NETWORK_INTERFACE_NAMES=eth0 eth1'
+2025-01-22 08:18:46.043 | ++ DIB_NETWORK_INTERFACE_NAMES='eth0 eth1'
+2025-01-22 08:18:46.044 | dib-run-parts Sourcing environment file /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/50-disable-cloud-init
+2025-01-22 08:18:46.046 | + source /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/50-disable-cloud-init
+2025-01-22 08:18:46.046 | ++ export DIB_CLOUD_INIT_DATASOURCES=None
+2025-01-22 08:18:46.046 | ++ DIB_CLOUD_INIT_DATASOURCES=None
+2025-01-22 08:18:46.046 | dib-run-parts Sourcing environment file /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/75-nodepool-base-env
+2025-01-22 08:18:46.049 | + source /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/75-nodepool-base-env
+2025-01-22 08:18:46.049 | ++ export NODEPOOL_STATIC_NAMESERVER_V6=2606:4700:4700::1111
+2025-01-22 08:18:46.049 | ++ NODEPOOL_STATIC_NAMESERVER_V6=2606:4700:4700::1111
+2025-01-22 08:18:46.049 | ++ export NODEPOOL_STATIC_NAMESERVER_V4=1.0.0.1
+2025-01-22 08:18:46.049 | ++ NODEPOOL_STATIC_NAMESERVER_V4=1.0.0.1
+2025-01-22 08:18:46.049 | ++ export NODEPOOL_STATIC_NAMESERVER_V6_FALLBACK=2001:4860:4860::8888
+2025-01-22 08:18:46.049 | ++ NODEPOOL_STATIC_NAMESERVER_V6_FALLBACK=2001:4860:4860::8888
+2025-01-22 08:18:46.049 | ++ export NODEPOOL_STATIC_NAMESERVER_V4_FALLBACK=8.8.8.8
+2025-01-22 08:18:46.049 | ++ NODEPOOL_STATIC_NAMESERVER_V4_FALLBACK=8.8.8.8
+2025-01-22 08:18:46.049 | dib-run-parts Sourcing environment file /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/99-dib-init-system
+2025-01-22 08:18:46.051 | + source /root/dib_build.3EXO5Tyw/hooks/root.d/../environment.d/99-dib-init-system
+2025-01-22 08:18:46.051 | ++ '[' -z systemd ']'
+2025-01-22 08:18:46.051 | ++ case $DIB_INIT_SYSTEM in
+2025-01-22 08:18:46.052 | dib-run-parts Running /root/dib_build.3EXO5Tyw/hooks/root.d/08-debootstrap
+2025-01-22 08:18:46.054 | + set -eu
+2025-01-22 08:18:46.054 | + set -o pipefail
+2025-01-22 08:18:46.055 | + '[' -f /root/dib_build.3EXO5Tyw/mnt/.extra_settings ']'
+2025-01-22 08:18:46.055 | + '[' -n ubuntu ']'
+2025-01-22 08:18:46.055 | + '[' -n jammy ']'
+2025-01-22 08:18:46.055 | + '[' -n http://archive.ubuntu.com/ubuntu ']'
+2025-01-22 08:18:46.055 | + DIB_DEBIAN_COMPONENTS=main,universe
+2025-01-22 08:18:46.055 | + DIB_DEBOOTSTRAP_EXTRA_ARGS=--no-check-gpg
+2025-01-22 08:18:46.055 | + DEBOOTSTRAP_TARBALL=/opt/dib_cache/debootstrap-ubuntu-jammy-amd64.tar.gz
+2025-01-22 08:18:46.055 | + http_proxy=
+2025-01-22 08:18:46.055 | + no_proxy=
+2025-01-22 08:18:46.055 | + DEBOOTSTRAP_QEMU=
+2025-01-22 08:18:46.056 | ++ debootstrap --version
+2025-01-22 08:18:46.065 | + _debootstrap_version='debootstrap 1.0.128+nmu2+deb12u1'
+2025-01-22 08:18:46.065 | + _debootstrap_version=128
+2025-01-22 08:18:46.065 | + [[ jammy == \b\u\s\t\e\r ]]
+2025-01-22 08:18:46.065 | + '[' -n '' -o -n '' ']'
+2025-01-22 08:18:46.065 | + KEYRING_OPT=
+2025-01-22 08:18:46.065 | + '[' -n '' ']'
+2025-01-22 08:18:46.066 | ++ dpkg --print-architecture
+2025-01-22 08:18:46.068 | + '[' amd64 '!=' amd64 ']'
+2025-01-22 08:18:46.068 | + sudo sh -c 'http_proxy= no_proxy= debootstrap --verbose         --variant=minbase         --components=main,universe         --arch=amd64                  --no-check-gpg         jammy         /root/dib_build.3EXO5Tyw/mnt         http://archive.ubuntu.com/ubuntu         '
+2025-01-22 08:18:46.072 | sudo: unable to send audit message: Operation not permitted
+2025-01-22 08:18:46.110 | mknod: /root/dib_build.3EXO5Tyw/mnt/test-dev-null: Operation not permitted
+2025-01-22 08:18:46.111 | E: Cannot install into target '/root/dib_build.3EXO5Tyw/mnt' mounted with noexec or nodev
+2025-01-22 08:18:46.118 | + diskimage_builder/lib/common-functions:run_d:1                                   :   trap_cleanup
+2025-01-22 08:18:46.121 | + diskimage_builder/lib/img-functions:trap_cleanup:35                              :   exitval=1
+2025-01-22 08:18:46.125 | + diskimage_builder/lib/img-functions:trap_cleanup:36                              :   cleanup
+2025-01-22 08:18:46.129 | + diskimage_builder/lib/img-functions:cleanup:41                                   :   unmount_image
+2025-01-22 08:18:46.132 | + diskimage_builder/lib/img-functions:unmount_image:21                             :   sync

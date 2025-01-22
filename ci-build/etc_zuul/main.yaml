@@ -1,0 +1,26 @@
+- tenant:
+    name: openstack
+    source:
+      gerrit:
+        config-projects:
+          - zuul-config
+      opendev.org:
+        untrusted-projects:
+          - openstack/openstack-zuul-jobs
+          - zuul/zuul-jobs
+          - openstack/requirements
+          - openstack/cinder
+          - openstack/glance
+          - openstack/keystone
+          - openstack/neutron
+          - openstack/nova
+          - openstack/placement
+          - openstack/swift
+          - openstack/tempest
+          - openstack/os-test-images
+          - openstack/os-brick
+          - openstack/cinder-tempest-plugin
+      openstack.gerrit:
+        untrusted-projects:
+          - opendev/ci-sandbox
+          - openstack/devstack

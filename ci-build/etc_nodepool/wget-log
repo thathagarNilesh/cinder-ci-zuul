@@ -1,0 +1,16 @@
+--2025-01-22 10:44:39--  http://archive.ubuntu.com/ubuntu/dists/focal/InRelease
+Resolving archive.ubuntu.com (archive.ubuntu.com)... 185.125.190.81, 91.189.91.83, 185.125.190.83, ...
+Connecting to archive.ubuntu.com (archive.ubuntu.com)|185.125.190.81|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 264892 (259K)
+Saving to: '/tmp/dib_build.xJA4otGa/mnt/var/lib/apt/lists/partial/archive.ubuntu.com_ubuntu_dists_focal_InRelease'
+
+     0K .......... .......... .......... .......... .......... 19%  238K 1s
+    50K .......... .......... .......... .......... .......... 38%  420K 1s
+   100K .......... .......... .......... .......... .......... 57%  841K 0s
+   150K .......... .......... .......... .......... .......... 77%  946K 0s
+   200K .......... .......... .......... .......... .......... 96% 1.35M 0s
+   250K ........                                              100% 1.73M=0.5s
+
+2025-01-22 10:44:39 (536 KB/s) - '/tmp/dib_build.xJA4otGa/mnt/var/lib/apt/lists/partial/archive.ubuntu.com_ubuntu_dists_focal_InRelease' saved [264892/264892]
+

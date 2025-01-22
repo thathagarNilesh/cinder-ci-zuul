@@ -1,0 +1,89 @@
+images-dir: /etc/nodepool/dib
+build-log-dir: /etc/nodepool/dib_log
+elements-dir: /etc/nodepool/elements
+build-log-retention: 7
+
+webapp:
+  port: 8005
+  listen_address: 0.0.0.0
+
+zookeeper-servers:
+  - host: zk
+    port: 2281
+zookeeper-tls:
+  cert: /var/certs/certs/client.pem
+  key: /var/certs/keys/clientkey.pem
+  ca: /var/certs/certs/cacert.pem
+
+labels:
+  - name: ubuntu-jammy
+  - name: nodepool-jammy
+    min-ready: 0
+
+diskimages:
+  - name: nodepool-jammy
+    elements:
+      - ubuntu-minimal
+      - vm
+      - simple-init
+      - growroot
+      - cache-devstack
+      - openstack-repos
+      - nodepool-base
+      - infra-package-needs
+    release: jammy
+    env-vars:
+      GIT_BASE: http://opendev.org
+      DIB_DEBIAN_COMPONENTS: 'main,universe'
+      DIB_APT_LOCAL_CACHE: '0'
+      DIB_TMP: '/opt/dib_tmp'
+      DIB_DISABLE_APT_CLEANUP: '1'
+      DIB_DEBOOTSTRAP_EXTRA_ARGS: '--no-check-gpg'
+      TMPDIR: /root/
+      DIB_CHECKSUM: '1'
+      DIB_IMAGE_CACHE: /opt/dib_cache
+      DIB_GRUB_TIMEOUT: '0'
+      DIB_SHOW_IMAGE_USAGE: '1'
+      ZUUL_USER_SSH_PUBLIC_KEY: |
+        ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILn+teZqco1R+4zFqI3Do4QcMc0pi+Zqc8SDLi1idH1z root@6687c91eb78e
+
+
+providers:
+  - name: static-vms
+    driver: static
+    pools:
+#      - name: main
+#        nodes:
+#          - name: node
+#            labels: ubuntu-jammy
+#            host-key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOgHJYejINIKzUiuSJ2MN8uPc+dfFrZ9JH1hLWS8gI+g"
+#            python-path: /usr/bin/python3
+#            username: root
+      - name: powerflex
+        nodes:
+          - name: 10.228.237.212
+            labels: ubuntu-jammy
+            host-key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICvrqH6N5US5zqfxQmk4sAM9IjUa/twbRlEERkOaNpBc"
+            python-path: /usr/bin/python3
+            username: zuul
+  - name: ci-cloud
+    driver: openstack
+    cloud: ci-cloud
+    boot-timeout: 600
+    launch-timeout: 3600
+    launch-retries: 3
+    diskimages:
+      - name: nodepool-jammy
+        config-drive: true
+    pools:
+      - name: dell-openstack-ci
+        max-servers: 2
+        networks:
+          - public
+        labels:
+          - name: nodepool-jammy
+            min-ram: 8192
+            diskimage: nodepool-jammy
+            flavor-name: m1.large
+            key-name: nodepool_key
+
