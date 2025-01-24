@@ -11,7 +11,13 @@
     nodeset:
       nodes:
         - name: controller
-          label: ubuntu-jammy
+#          label: ubuntu-jammy
+          label: nodepool-jammy
+      groups:
+        - name: tempest
+          nodes:
+            - controller
+    
 
 - job:
     name: devstack-base
@@ -126,12 +132,12 @@
       - opendev.org/openstack/requirements
     vars:
       devstack_localrc:
-        SERVICE_HOST: "{{ hostvars['controller']['nodepool']['public_ipv4'] }}"
-        HOST_IP: "{{ hostvars['controller']['nodepool']['public_ipv4'] }}"
+        SERVICE_HOST: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}"
+        HOST_IP: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}"
         #PUBLIC_BRIDGE_MTU: '{{ external_bridge_mtu }}'
         DATABASE_TYPE: mysql
-        RABBIT_HOST: "{{ hostvars['controller']['nodepool']['public_ipv4'] }}"
-        DATABASE_HOST: "{{ hostvars['controller']['nodepool']['public_ipv4'] }}"
+        RABBIT_HOST: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}"
+        DATABASE_HOST: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}"
       devstack_services:
         # Shared services
         dstat: false
@@ -177,7 +183,8 @@
       - opendev.org/openstack/placement
       - opendev.org/openstack/swift
       - opendev.org/openstack/os-test-images
-    timeout: 7200
+      - opendev.org/openstack/devstack
+    timeout: 10800
     vars:
       # based on observation of the integrated gate
       # tempest-integrated-compute was only using ~1.7GB of swap
@@ -299,7 +306,6 @@
 
 - job:
     name: devstack-cinder-plugin-tempest-base
-    abstract: true 
     parent: devstack-tempest
     description: |
       Base tempest job with cinder plugin.
@@ -313,11 +319,11 @@
       - ^tox.ini$
     timeout: 7200
     vars:
-      tempest_concurrency: 2
       devstack_localrc:
         TEMPEST_PLUGINS: 'cinder-tempest-plugin'
       devstack_services:
         horizon: false
+      tempest_concurrency: 4
       tox_envlist: all
       tempest_test_regex: |
         volume
@@ -330,13 +336,19 @@
     vars:
       devstack_localrc:
         CINDER_ENABLED_BACKENDS: powerflex1,powerflex2
-        TEMPEST_CONCURRENCY: 2
         TEMPEST_EXTEND_ATTACHED_VOLUME: true
         TEMPEST_VOLUME_DRIVER: EMC
         TEMPEST_VOLUME_VENDOR: 'Dell EMC'
         TEMPEST_STORAGE_PROTOCOL: scaleio
         ENABLE_VOLUME_MULTIATTACH: true
       devstack_local_conf:
+        test-config:
+          $TEMPEST_CONFIG:
+            validation:
+              run_validation: true
+            volume:
+              volume_size: 8
+              volume_size_extend: 8
         post-config:
           $CINDER_CONF:
             powerflex1:
@@ -347,10 +359,10 @@
               suppress_requests_ssl_warnings: True
               volume_driver: cinder.volume.drivers.dell_emc.powerflex.driver.PowerFlexDriver
               image_volume_cache_enabled: True
-              san_ip: 10.228.225.213
-              san_login: adminc
-              san_password: #1Danger0us
-              powerflex_storage_pools: OpenstackPD:OpenstackSP0
+              san_ip: 10.225.109.124
+              san_login: admin
+              san_password: Notuse4per!
+              powerflex_storage_pools: PD1:SP1
           $NOVA_CONF:
             libvirt:
               volume_use_multipath: True
@@ -358,7 +370,9 @@
         volume|^cinder_tempest_plugin 
 
 - job:
-    name: powerflex-v3-backend-cinder-tempest
+    name: test-job
+    parent: dell-base
+    timeout: 300
     description: |
       Runs cinder tempest plugin tests with Dell PowerFlex 3.6
     run: playbooks/testjob.yaml

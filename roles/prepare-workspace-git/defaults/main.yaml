@@ -1,0 +1,4 @@
+cached_repos_root: /opt/git
+mirror_workspace_quiet: false
+zuul_workspace_root: "{{ ansible_user_dir }}"
+prepare_workspace_sync_required_projects_only: false

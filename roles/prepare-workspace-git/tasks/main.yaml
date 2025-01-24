@@ -1,0 +1,41 @@
+- name: Filter zuul projects if sync-only-required-projects flag is set
+  set_fact:
+    _zuul_projects: >
+      {{ _zuul_projects | default({}) |
+            combine({ zj_project.key : zj_project.value }) }}
+  with_dict: "{{ zuul.projects }}"
+  loop_control:
+    loop_var: zj_project
+  when:
+    - prepare_workspace_sync_required_projects_only
+    - zj_project.value.canonical_name == zuul.project.canonical_name or zj_project.value.required
+
+- name: Don't filter zuul projects if flag is false
+  set_fact:
+    _zuul_projects: "{{ zuul.projects }}"
+  when: not prepare_workspace_sync_required_projects_only
+
+- name: Set initial repo states in workspace
+  repo_prep:
+    cached_repos_root: "{{ cached_repos_root }}"
+    executor_work_root: "{{ zuul.executor.work_root }}"
+    zuul_projects: "{{ _zuul_projects }}"
+    zuul_workspace_root: "{{ zuul_workspace_root }}"
+
+- name: Synchronize src repos to workspace directory
+  delegate_to: localhost
+  repo_sync:
+    ansible_connection: "{{ ansible_connection }}"
+    ansible_host: "{{ ansible_host | ansible.utils.ipwrap }}"
+    ansible_port: "{{ ansible_port }}"
+    ansible_user: "{{ ansible_user }}"
+    executor_work_root: "{{ zuul.executor.work_root }}"
+    inventory_hostname: "{{ inventory_hostname }}"
+    zuul_projects: "{{ _zuul_projects }}"
+    zuul_resources: "{{ zuul.resources | default({}) }}"
+    zuul_workspace_root: "{{ zuul_workspace_root }}"
+
+- name: Update remote repository state
+  repo_update:
+    zuul_projects: "{{ _zuul_projects }}"
+    zuul_workspace_root: "{{ zuul_workspace_root }}"
