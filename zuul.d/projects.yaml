@@ -17,4 +17,3 @@
       jobs:
         - powerflex-v4-backend-cinder-tempest:
             branches: master
-#        - devstack-cinder-plugin-tempest-base

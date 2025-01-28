@@ -18,6 +18,8 @@
           - openstack/swift
           - openstack/tempest
           - openstack/os-test-images
+          - openstack/os-brick
+          - openstack/cinder-tempest-plugin
       openstack.gerrit:
         untrusted-projects:
           - opendev/ci-sandbox

@@ -1,3 +1,12 @@
+images-dir: /etc/nodepool/dib
+build-log-dir: /etc/nodepool/dib_log
+elements-dir: /etc/nodepool/elements
+build-log-retention: 7
+
+webapp:
+  port: 8005
+  listen_address: 0.0.0.0
+
 zookeeper-servers:
   - host: zk
     port: 2281
@@ -7,23 +16,60 @@ zookeeper-tls:
   ca: /var/certs/certs/cacert.pem
 
 labels:
-  - name: ubuntu-jammy
+  - name: nodepool-jammy
+    min-ready: 3
+    max-ready-age: 86400
+
+diskimages:
+  - name: nodepool-jammy
+    elements:
+      - ubuntu-minimal
+      - vm
+      - simple-init
+      - growroot
+      - cache-devstack
+      - openstack-repos
+      - nodepool-base
+      - infra-package-needs
+      - zuul-worker
+    release: jammy
+    env-vars:
+      GIT_BASE: http://opendev.org
+      DIB_DEBIAN_COMPONENTS: 'main,universe'
+      DIB_APT_LOCAL_CACHE: '0'
+      DIB_TMP: '/opt/dib_tmp'
+      DIB_DISABLE_APT_CLEANUP: '1'
+      DIB_DEBOOTSTRAP_EXTRA_ARGS: '--no-check-gpg'
+      TMPDIR: /root/
+      DIB_CHECKSUM: '1'
+      DIB_IMAGE_CACHE: /opt/dib_cache
+      DIB_GRUB_TIMEOUT: '0'
+      DIB_SHOW_IMAGE_USAGE: '1'
+      ZUUL_USER_SSH_PUBLIC_KEY: |
+        ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKpZ8VkmW/6G1MNghL0mUiN51K9XLPZUkL8Mn8tkwean root@ff87588967c7
+
 
 providers:
-  - name: static-vms
-    driver: static
+  - name: ci-cloud
+    driver: openstack
+    cloud: ci-cloud
+    boot-timeout: 600
+    launch-timeout: 3600
+    launch-retries: 3
+    clean-floating-ips: true
+    diskimages: 
+      - name: nodepool-jammy
+        config-drive: true
     pools:
-#      - name: main
-#        nodes:
-#          - name: node
-#            labels: ubuntu-jammy
-#            host-key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOgHJYejINIKzUiuSJ2MN8uPc+dfFrZ9JH1hLWS8gI+g"
-#            python-path: /usr/bin/python3
-#            username: root
-      - name: powerflex
-        nodes:
-          - name: 10.228.237.212
-            labels: ubuntu-jammy
-            host-key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICvrqH6N5US5zqfxQmk4sAM9IjUa/twbRlEERkOaNpBc"
-            python-path: /usr/bin/python3
-            username: zuul
+      - name: dell-openstack-ci
+        auto-floating-ip: true
+        max-servers: 4
+        security-groups: 
+          - nodepool-secgroup
+        networks:
+          - nodepool
+        labels:
+          - name: nodepool-jammy
+            diskimage: nodepool-jammy
+            flavor-name: m1.large
+
