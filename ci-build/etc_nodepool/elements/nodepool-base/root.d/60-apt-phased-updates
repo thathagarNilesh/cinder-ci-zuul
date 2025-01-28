@@ -21,10 +21,10 @@ fi
 set -eu
 set -o pipefail
 
-# NOTE(pabelanger): Because our AFS mirrors are not signed, we need to allow
-# unauthenticated packages and insecure repos.
-if [ -d "$TARGET_ROOT/etc/apt/apt.conf.d" ]; then
-    echo "APT::Get::AllowUnauthenticated \"true\";" | sudo tee $TARGET_ROOT/etc/apt/apt.conf.d/95allow-unauthenticated
-    echo "Acquire::AllowInsecureRepositories \"true\";" | sudo tee -a $TARGET_ROOT/etc/apt/apt.conf.d/95allow-unauthenticated
+# NOTE(frickler): Our images builds always install the newest updates,
+# so we need this in order to avoid conflicts
+if [[ ":jammy: :noble:" =~ :${DIB_RELEASE}: ]]; then
+    if [ -d "$TARGET_ROOT/etc/apt/apt.conf.d" ]; then
+        echo "APT::Get::Always-Include-Phased-Updates \"true\";" | sudo tee $TARGET_ROOT/etc/apt/apt.conf.d/95phased-updates
+    fi
 fi
-

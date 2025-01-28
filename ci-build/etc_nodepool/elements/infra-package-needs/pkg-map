@@ -2,16 +2,46 @@
   "release": {
     "centos": {
       "8": {
-        "python-dev": "",
         "ntp": "chrony",
         "ntpdate": ""
+       },
+      "9-stream": {
+        "ntp": "chrony",
+        "ntpdate": "",
+        "iptables": "iptables-services"
+       }
+    },
+    "debian": {
+      "bookworm": {
+        "ntp": "",
+        "ntpdate": ""
+      }
+    },
+    "rocky": {
+      "8": {
+        "ntp": "chrony",
+        "ntpdate": "",
+        "coreutils": ""
+      },
+      "9": {
+        "ntp": "chrony",
+        "ntpdate": "",
+        "iptables": "iptables-services",
+        "coreutils": ""
        }
     },
     "ubuntu": {
       "focal": {
         "ntp": "",
-        "ntpdate": "",
-        "python-dev": ""
+        "ntpdate": ""
+      },
+      "jammy": {
+        "ntp": "",
+        "ntpdate": ""
+      },
+      "noble": {
+        "ntp": "",
+        "ntpdate": ""
       }
    }
   },
@@ -25,10 +55,21 @@
       "redhat-rpm-config": "redhat-rpm-config",
       "redhat-lsb-core": "redhat-lsb-core"
     },
+    "openeuler": {
+      "cron": "cronie",
+      "build-essential": "glibc-devel gcc make",
+      "dnsutils": "bind-utils",
+      "iproute2": "iproute",
+      "iputils-ping": "iputils",
+      "ntp": "ntp ntp-perl",
+      "python3-dev": "python3-devel",
+      "iptables": "iptables-services",
+      "haveged": "haveged"
+    },
     "gentoo": {
+      "acl": "sys-apps/acl",
       "build-essential": "",
       "cron": "sys-process/cronie",
-      "curl": "net-misc/curl",
       "dnsutils": "net-dns/bind-tools",
       "gentoolkit": "app-portage/gentoolkit",
       "git": "dev-vcs/git",
@@ -37,9 +78,7 @@
       "iputils-ping": "net-misc/iputils",
       "ntp": "net-misc/ntp",
       "ntpdate": "net-misc/ntp",
-      "python-dev": "",
       "python3-dev": "",
-      "tox": "dev-python/tox",
       "traceroute": "net-analyzer/traceroute",
       "uuid-runtime": ""
     }
@@ -52,7 +91,6 @@
       "iproute2": "iproute",
       "iputils-ping": "iputils",
       "ntp": "ntp ntp-perl",
-      "python-dev": "python-devel",
       "python3-dev": "",
       "uuid-runtime": "",
       "iptables": "iptables-services",
@@ -65,22 +103,15 @@
       "gnupg2": "gpg2",
       "iputils-ping": "iputils",
       "ntpdate": "",
-      "python-xml": "python-xml",
-      "python-dev": "python-devel",
       "python3-dev": "python3-devel",
-      "python3": "python3",
       "iptables": "iptables",
       "uuid-runtime": "uuidd"
     }
   },
   "default": {
-    "curl": "curl",
     "iptables": "iptables-persistent",
     "gentoolkit": "",
     "redhat-rpm-config": "",
-    "redhat-lsb-core": "",
-    "python-xml": "",
-    "python3": "",
-    "tox": ""
+    "redhat-lsb-core": ""
   }
 }

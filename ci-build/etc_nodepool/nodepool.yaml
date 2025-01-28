@@ -16,9 +16,9 @@ zookeeper-tls:
   ca: /var/certs/certs/cacert.pem
 
 labels:
-  - name: ubuntu-jammy
   - name: nodepool-jammy
-    min-ready: 0
+    min-ready: 3
+    max-ready-age: 86400
 
 diskimages:
   - name: nodepool-jammy
@@ -31,6 +31,7 @@ diskimages:
       - openstack-repos
       - nodepool-base
       - infra-package-needs
+      - zuul-worker
     release: jammy
     env-vars:
       GIT_BASE: http://opendev.org
@@ -45,45 +46,30 @@ diskimages:
       DIB_GRUB_TIMEOUT: '0'
       DIB_SHOW_IMAGE_USAGE: '1'
       ZUUL_USER_SSH_PUBLIC_KEY: |
-        ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILn+teZqco1R+4zFqI3Do4QcMc0pi+Zqc8SDLi1idH1z root@6687c91eb78e
+        ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKpZ8VkmW/6G1MNghL0mUiN51K9XLPZUkL8Mn8tkwean root@ff87588967c7
 
 
 providers:
-  - name: static-vms
-    driver: static
-    pools:
-#      - name: main
-#        nodes:
-#          - name: node
-#            labels: ubuntu-jammy
-#            host-key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOgHJYejINIKzUiuSJ2MN8uPc+dfFrZ9JH1hLWS8gI+g"
-#            python-path: /usr/bin/python3
-#            username: root
-      - name: powerflex
-        nodes:
-          - name: 10.228.237.212
-            labels: ubuntu-jammy
-            host-key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICvrqH6N5US5zqfxQmk4sAM9IjUa/twbRlEERkOaNpBc"
-            python-path: /usr/bin/python3
-            username: zuul
   - name: ci-cloud
     driver: openstack
     cloud: ci-cloud
     boot-timeout: 600
     launch-timeout: 3600
     launch-retries: 3
-    diskimages:
+    clean-floating-ips: true
+    diskimages: 
       - name: nodepool-jammy
         config-drive: true
     pools:
       - name: dell-openstack-ci
-        max-servers: 2
+        auto-floating-ip: true
+        max-servers: 4
+        security-groups: 
+          - nodepool-secgroup
         networks:
-          - public
+          - nodepool
         labels:
           - name: nodepool-jammy
-            min-ram: 8192
             diskimage: nodepool-jammy
             flavor-name: m1.large
-            key-name: nodepool_key
 
