@@ -121,7 +121,7 @@ services:
     volumes:
       - "./playbooks/:/var/playbooks/:z"
       - "./etc_nodepool/:/etc/nodepool/:z"
-      - "./etc_nodepool/openstack/:/etc/nodepool/openstack/:z"
+      - "./etc_nodepool/openstack/:/etc/openstack/:z"
       - "certs:/var/certs:z"
     ports:
       - "8005:8005"
@@ -156,7 +156,6 @@ services:
     command: "sh -c '/var/playbooks/wait-to-start-certs.sh && exec nodepool-builder -f'"
     networks:
       - zuul
-    privileged: true
     cap_add:
       - CAP_MKNOD
       - CAP_AUDIT_WRITE
