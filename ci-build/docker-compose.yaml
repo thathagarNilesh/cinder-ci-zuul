@@ -157,7 +157,6 @@ services:
     command: "sh -c '/var/playbooks/wait-to-start-certs.sh && exec nodepool-builder -f'"
     networks:
       - zuul
-    privileged: true
     cap_add:
       - CAP_MKNOD
       - CAP_AUDIT_WRITE
