@@ -1,5 +1,16 @@
+- authorization-rule:
+    name: tenant-group
+    conditions:
+      - groups: "{tenant.name}-admin"
+- authorization-rule:
+    name: admin-user
+    conditions:
+      - preferred_username: admin
 - tenant:
     name: openstack
+    admin-rules:
+        - tenant-group
+        - admin-user
     source:
       gerrit:
         config-projects:

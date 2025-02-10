@@ -2,7 +2,9 @@ clouds:
   ci-cloud:
     auth: 
       auth_url: http://10.225.110.64/identity
-      project_name: admin
-      username: admin
-      password: secret
+      project_name: nodepool
+      username: nodepool
+      password: dangerous
+      user_domain_name: Default
+      project_domain_name: Default
     region_name: RegionOne

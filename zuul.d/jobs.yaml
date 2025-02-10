@@ -374,5 +374,5 @@
     parent: dell-base
     timeout: 300
     description: |
-      Runs cinder tempest plugin tests with Dell PowerFlex 3.6
-    run: playbooks/testjob.yaml
+      Install SDC
+    run: playbooks/deploy-powerflex-sdc.yaml
