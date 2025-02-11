@@ -79,16 +79,6 @@
         name: create_project
       vars:
         project: zuul-config
-    - name: Create test1 project
-      include_role:
-        name: create_project
-      vars:
-        project: test1
-    - name: Create test2 project
-      include_role:
-        name: create_project
-      vars:
-        project: test2
 
     # The Zuul user is created last because it is an atomic operation
     # which signals that Gerrit is ready for use and it is safe for
