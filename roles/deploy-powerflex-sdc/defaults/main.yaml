@@ -3,5 +3,7 @@ mdm_ip: 10.225.1.134
 powerflex_sdc_deps:
 - libnuma1
 - linux-headers-generic
-powerflex_cinder_backend: powerflex
-powerflex_san_password: Notuse4per!
+powerflex1_cinder_backend: powerflex1
+powerflex2_cinder_backend: powerflex2
+powerflex1_san_password: Notuse4per!
+powerflex2_san_password: Notuse4per!

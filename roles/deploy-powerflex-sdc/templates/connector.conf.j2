@@ -1,5 +1,11 @@
-[{{ powerflex_cinder_backend }}]
-san_password = {{ powerflex_san_password }}
-{%- if powerflex_rep_san_password is defined %}
-replicating_san_password = {{ powerflex_rep_san_password }}
+[{{ powerflex1_cinder_backend }}]
+san_password = {{ powerflex1_san_password }}
+{%- if powerflex1_rep_san_password is defined %}
+replicating_san_password = {{ powerflex1_rep_san_password }}
+{%- endif %}
+
+[{{ powerflex2_cinder_backend }}]
+san_password = {{ powerflex2_san_password }}
+{%- if powerflex2_rep_san_password is defined %}
+replicating_san_password = {{ powerflex2_rep_san_password }}
 {%- endif %}
