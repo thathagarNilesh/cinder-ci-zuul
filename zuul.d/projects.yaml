@@ -15,6 +15,7 @@
     name: opendev/ci-sandbox
     dell-emc-powerflex-ci-check:
       jobs:
-#        - powerflex-v4-backend-cinder-tempest:
-#            branches: master
-        - testjob
+        # - devstack-cinder-plugin-tempest-base
+        #- powerflex-v4-backend-cinder-tempest:
+        #    branches: master
+        - powerflex-sdc

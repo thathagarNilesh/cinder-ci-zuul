@@ -11,8 +11,8 @@
     nodeset:
       nodes:
         - name: controller
-#          label: ubuntu-jammy
-          label: nodepool-jammy
+          #          label: ubuntu-jammy
+          label: nodepool-jammy-1
       groups:
         - name: tempest
           nodes:
@@ -288,6 +288,10 @@
       devstack_services:
         tempest: true
       devstack_local_conf:
+        test-config:
+          $TEMPEST_CONFIG:
+            compute:
+              min_compute_nodes: "{{ groups['compute'] | default(['controller']) | length }}"
       test_results_stage_name: test_results
       zuul_copy_output:
         '{{ devstack_base_dir }}/tempest/etc/tempest.conf': logs
@@ -368,11 +372,10 @@
               volume_use_multipath: True
       tempest_test_regex: |
         volume|^cinder_tempest_plugin 
+    pre-run: playbooks/deploy-sdc.yaml
 
 - job:
-    name: test-job
+    name: powerflex-sdc
     parent: dell-base
-    timeout: 300
-    description: |
-      Install SDC
-    run: playbooks/deploy-powerflex-sdc.yaml
+    description: temp job to validate playbook
+    run: playbooks/deploy-sdc.yaml
