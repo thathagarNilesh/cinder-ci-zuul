@@ -41,7 +41,7 @@
 
 - name: Create openstack directory
   file:
-    path: /opt/emc/openstack
+    path: /opt/emc/scaleio/openstack
     state: directory
     mode: '0755'
   become: yes
@@ -50,5 +50,6 @@
 - name: Render os-brick connector file
   template:
     src: connector.conf.j2
-    dest: /opt/emc/openstack/connector.conf
+    dest: /opt/emc/scaleio/openstack/connector.conf
+  become: yes
 
