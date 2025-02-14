@@ -1,0 +1,7 @@
+powerflex_sdc_deb: EMC-ScaleIO-sdc-4.5-2000.135.Ubuntu.22.04.x86_64.deb
+mdm_ip: 10.225.1.134
+powerflex_sdc_deps:
+- libnuma1
+- linux-headers-generic
+powerflex_cinder_backend: powerflex
+powerflex_san_password: Notuse4per!
