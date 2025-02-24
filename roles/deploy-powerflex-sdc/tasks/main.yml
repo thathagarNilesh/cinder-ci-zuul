@@ -23,7 +23,7 @@
     #with_items: "{{ powerflex_sdc_deps }}"
     name:
       - libnuma1
-      - linux-headers-generic
+      - linux-headers-{{ ansible_kernel }}
     update_cache: yes
   become: yes
 
