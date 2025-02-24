@@ -14,5 +14,4 @@
     - prepare-workspace-git
     - validate-host
     - log-inventory
-    
-
+    - configure-resolvconf
