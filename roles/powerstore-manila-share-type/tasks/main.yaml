@@ -1,0 +1,5 @@
+- name: Create PowerStore Manila share type
+  shell: |
+    bash -c "source /opt/stack/devstack/openrc admin admin && \
+    openstack share type create powerstore False && \
+    openstack share type set powerstore --extra-specs share_backend_name=london snapshot_support=True create_share_from_snapshot_support=True revert_to_snapshot_support=True"

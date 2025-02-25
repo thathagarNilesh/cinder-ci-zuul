@@ -1,0 +1,1 @@
+Adding PowerScale Manila share type
