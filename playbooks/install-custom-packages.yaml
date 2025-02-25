@@ -1,0 +1,6 @@
+- hosts: all
+  roles:
+    - role: install-nvme-packages
+      when: "'powerstore-nvme-tcp-cinder-tempest' in hostvars['localhost']['zuul']['job']"
+    - role: install-nfs-packages
+      when: "'powerstore-nfs-cinder-tempest' in hostvars['localhost']['zuul']['job']"
