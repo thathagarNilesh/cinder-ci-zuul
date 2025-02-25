@@ -1,0 +1,1 @@
+Adding PowerStore Manila share type

@@ -11,8 +11,8 @@
     nodeset:
       nodes:
         - name: controller
-          #          label: ubuntu-jammy
-          label: nodepool-jammy-1
+#          label: ubuntu-jammy
+          label: nodepool-jammy
       groups:
         - name: tempest
           nodes:
@@ -184,6 +184,7 @@
       - opendev.org/openstack/swift
       - opendev.org/openstack/os-test-images
       - opendev.org/openstack/devstack
+      - opendev.org/openstack/manila
     timeout: 10800
     vars:
       # based on observation of the integrated gate
@@ -317,7 +318,8 @@
       This job doesn't configure any backend but install the cinder plugin for tempest.
     required-projects:
       - openstack/cinder-tempest-plugin
-    irrelevant-files: &irrelevant-files
+    # Define the anchor for irrelevant-files once
+    irrelevant-files: &irrelevant_files
       - ^.*\.rst$
       - ^doc/.*$
       - ^tox.ini$
@@ -344,15 +346,23 @@
         TEMPEST_VOLUME_DRIVER: EMC
         TEMPEST_VOLUME_VENDOR: 'Dell EMC'
         TEMPEST_STORAGE_PROTOCOL: scaleio
-        ENABLE_VOLUME_MULTIATTACH: true
       devstack_local_conf:
         test-config:
           $TEMPEST_CONFIG:
+            compute-feature-enabled:
+              volume_multiattach: False
             validation:
               run_validation: true
             volume:
+              build_timeout: 600
               volume_size: 8
               volume_size_extend: 8
+              manage_volume_ref: source-id,%s
+              manage_snapshot_ref: source-id,%s
+            volume-feature-enabled:
+              consistency_group: True
+              extend_attached_volume: True
+              volume_revert: True
         post-config:
           $CINDER_CONF:
             powerflex1:
@@ -371,8 +381,285 @@
             libvirt:
               volume_use_multipath: True
       tempest_test_regex: |
-        volume|^cinder_tempest_plugin 
+        volume|^cinder_tempest_plugin
     pre-run: playbooks/deploy-sdc.yaml
+
+- job:
+    name: powerstore-cinder-base
+    parent: devstack-cinder-plugin-tempest-base
+    description: |
+      Base job for PowerStore cinder
+    vars:
+      devstack_localrc:
+        CINDER_ENABLED_BACKENDS: powerstore1,powerstore2
+        TEMPEST_EXTEND_ATTACHED_VOLUME: true
+        TEMPEST_VOLUME_DRIVER: EMC
+        TEMPEST_VOLUME_VENDOR: 'Dell EMC'
+        ENABLE_VOLUME_MULTIATTACH: true
+      devstack_local_conf:
+        test-config:
+          $TEMPEST_CONFIG:
+            validation:
+              run_validation: true
+            volume:
+              volume_size: 1
+              build_timeout: 300
+            volume-feature-enabled:
+              manage_snapshot: False
+              manage_volume: False
+              consistency_group: True
+              backup: True
+              volume_revert: True
+              multi_backend: True
+              extend_attached_volume: True
+              extend_attached_encrypted_volume: True
+        post-config:
+          $CINDER_CONF:
+            DEFAULT:
+              enabled_backends: powerstore1, powerstore2
+              use_multipath_for_image_xfer: true
+              max_over_subscription_ratio: 20
+            powerstore1:
+              volume_backend_name: powerstore1
+            powerstore2:
+              volume_backend_name: powerstore2
+            backend_defaults:
+              volume_driver: cinder.volume.drivers.dell_emc.powerstore.driver.PowerStoreDriver
+              san_ip: 10.230.24.76
+              san_login: admin
+              san_password: Braveoctopus045!
+              suppress_requests_ssl_warnings: True
+          $NOVA_CONF:
+            libvirt:
+              volume_use_multipath: True
+      tempest_test_regex: |
+        volume
+
+- job:
+    name: powerstore-iscsi-cinder-tempest
+    parent: powerstore-cinder-base
+    description: |
+      Runs cinder tempest plugin tests with Dell PowerStore ISCSI
+    vars:
+      devstack_localrc:
+        TEMPEST_STORAGE_PROTOCOL: iSCSI
+      devstack_local_conf:
+        post-config:
+          $CINDER_CONF:
+            backend_defaults:
+              storage_protocol: iSCSI
+
+- job:
+    name: powerstore-nvme-tcp-cinder-tempest
+    parent: powerstore-cinder-base
+    description: |
+      Runs cinder tempest plugin tests with Dell PowerStore NVME-TCP
+    vars:
+      devstack_localrc:
+        TEMPEST_STORAGE_PROTOCOL: NVMe
+      devstack_local_conf:
+        post-config:
+          $CINDER_CONF:
+            backend_defaults:
+              powerstore_nvme: True
+
+- job:
+    name: powerstore-nfs-cinder-tempest
+    parent: devstack-cinder-plugin-tempest-base
+    description: |
+      Runs cinder tempest plugin tests with Dell PowerStore NFS
+    vars:
+      devstack_localrc:
+        CINDER_ENABLED_BACKENDS: powerstore1,powerstore2
+        TEMPEST_VOLUME_DRIVER: EMC
+        TEMPEST_VOLUME_VENDOR: 'Dell'
+        ENABLE_VOLUME_MULTIATTACH: true
+        TEMPEST_STORAGE_PROTOCOL: nfs
+      devstack_local_conf:
+        test-config:
+          $TEMPEST_CONFIG:
+            validation:
+              run_validation: true
+            volume:
+              volume_size: 1
+              build_timeout: 300
+              disk_format: qcow2
+            volume-feature-enabled:
+              extend_attached_volume: False
+              extend_attached_encrypted_volume: False
+              consistency_group: False
+              manage_snapshot: False
+              manage_volume: False
+              backup: True
+              volume_revert: True
+              multi_backend: True
+              snapshot: True
+        post-config:
+          $CINDER_CONF:
+            DEFAULT:
+              enabled_backends: powerstore1, powerstore2
+              use_multipath_for_image_xfer: true
+              max_over_subscription_ratio: 20
+            powerstore1:
+              volume_backend_name: powerstore1
+              nas_share_path: '/Openstack_NFS_1'
+            powerstore2:
+              volume_backend_name: powerstore2
+              nas_share_path: '/Openstack_NFS_2'
+            backend_defaults:
+              volume_driver: cinder.volume.drivers.dell_emc.powerstore.nfs.PowerStoreNFSDriver
+              nfs_snapshot_support: True
+              nas_secure_file_operations: False
+              nas_secure_file_permissions: False
+              suppress_requests_ssl_warnings: True
+              nfs_sparsed_volumes: False
+              nfs_qcow2_volumes: False
+              nas_host: 10.230.43.247
+          $NOVA_CONF:
+            libvirt:
+              volume_use_multipath: True
+      tempest_test_regex: |
+        volume
+
+- job:
+    name: devstack-manila-plugin-tempest-base
+    parent: devstack-tempest
+    description: |
+      Base tempest job with manila plugin.
+
+      This job doesn't configure any backend but install the manila plugin for tempest.
+    required-projects:
+      - openstack/manila-tempest-plugin
+    # Instead of redefining the anchor, refer to the previously defined anchor.
+    irrelevant-files: *irrelevant_files
+    timeout: 7200
+    vars:
+      devstack_localrc:
+        TEMPEST_PLUGINS: 'manila-tempest-plugin'
+        TEMPEST_VOLUME_DRIVER: EMC
+        TEMPEST_VOLUME_VENDOR: 'Dell EMC'
+        MANILA_SERVICE_IMAGE_URL: file:///openstack/cache/files/manila-service-image.qcow2
+      devstack_local_conf:
+        test-config:
+          $TEMPEST_CONFIG:
+            share:
+              run_ipv6_tests: False
+              capability_create_share_from_snapshot_support: False
+              run_mount_snapshot_tests: False
+              run_migration_with_preserve_snapshots_tests: False
+              run_driver_assisted_migration_tests: False
+              run_host_assisted_migration_tests: False
+              run_replication_tests: False
+              run_manage_unmanage_snapshot_tests: False
+              run_snapshot_tests: True
+              run_quota_tests: True
+              share_creation_retry_number: 2
+              share_size: 10
+              run_revert_to_snapshot_tests: True
+              run_consistency_group_tests: False
+              run_manage_unmanage_tests: False
+              run_share_group_tests: False
+              multitenancy_enabled: False
+              create_networks_when_multitenancy_enabled: False
+              run_extend_tests: True
+              run_shrink_tests: False
+              enable_protocols: nfs,cifs
+              enable_ip_rules_for_protocols: nfs
+              enable_sid_rules_for_protocols: cifs
+              enable_user_rules_for_protocols: cifs
+              suppress_errors_in_cleanup: True
+              image_with_share_tools: manila-service-image-master
+        post-config:
+          $NOVA_CONF:
+            libvirt:
+              volume_use_multipath: True
+      devstack_services:
+        horizon: false
+        # Manila services
+        m-api: true
+        m-sch: true
+        m-shr: true
+        m-dat: true
+      devstack_plugins:
+        manila: https://opendev.org/openstack/manila.git
+        manila-ui: https://opendev.org/openstack/manila-ui
+        manila-tempest-plugin: https://opendev.org/openstack/manila-tempest-plugin
+      tempest_concurrency: 4
+      tox_envlist: all
+      tempest_test_regex: |
+        manila_tempest_tests.tests.api
+
+- job:
+    name: powerscale-manila-tempest
+    parent: devstack-manila-plugin-tempest-base
+    description: |
+      Runs manila tempest plugin tests with Dell PowerScale
+    vars:
+      devstack_localrc:
+        TEMPEST_STORAGE_PROTOCOL: NFS
+        CINDER_ENABLED_BACKENDS: NFS:isilon
+      devstack_local_conf:
+        test-config:
+          $TEMPEST_CONFIG:
+            share:
+              default_share_type_name: powerscale
+              backend_names: powerscale
+              capability_create_share_from_snapshot_support: True
+              run_quota_tests: False
+              run_revert_to_snapshot_tests: False
+        post-config:
+          $MANILA_CONF:
+            powerscale:
+              driver_handles_share_servers: False
+              share_driver: manila.share.drivers.dell_emc.driver.EMCShareDriver
+              emc_share_backend: isilon
+              share_backend_name: powerscale
+              enabled_share_protocols: NFS,CIFS
+              emc_nas_server:  10.205.232.128
+              emc_nas_server_port: 8080
+              emc_nas_login:  root
+              emc_nas_password:  a
+              emc_nas_root_dir: /ifs/manila
+            DEFAULT:
+              enabled_share_backends: powerscale
+              enabled_share_protocols: NFS,CIFS
+              share_name_template: CI-%s
+      tempest_test_regex: |
+        manila_tempest_tests.tests.api.((?!.*test_share_type_azs_share_groups_az_in_create_req|test_create_duplicate_single_host_rules|test_create_delete_access_rule_with_cidr|test_create_share_with_size_bigger_than_quota).)*$
+
+- job:
+    name: powerstore-manila-tempest
+    parent: devstack-manila-plugin-tempest-base
+    description: |
+      Runs manila tempest plugin tests with Dell PowerStore
+    vars:
+      devstack_localrc:
+        TEMPEST_STORAGE_PROTOCOL: NFS
+        CINDER_ENABLED_BACKENDS: NFS:powerstore
+      devstack_local_conf:
+        test-config:
+          $TEMPEST_CONFIG:
+            share:
+              default_share_type_name: default
+              backend_names: london
+        post-config:
+          $MANILA_CONF:
+            london:
+              driver_handles_share_servers: False
+              share_driver: manila.share.drivers.dell_emc.driver.EMCShareDriver
+              emc_share_backend: powerstore
+              share_backend_name: london
+              enabled_share_protocols: NFS,CIFS
+              dell_nas_backend_host: 10.230.24.76
+              dell_nas_server: Openstack_NAS
+              dell_nas_login: admin
+              dell_nas_password: Braveoctopus045!
+            DEFAULT:
+              enabled_share_backends: london
+              enabled_share_protocols: NFS,CIFS
+              share_name_template: CI-%s
+      tempest_test_regex: |
+        manila_tempest_tests.tests.api.((?!.*test_share_type_azs_share_groups_az_in_create_req|test_create_duplicate_single_host_rules|test_create_delete_access_rule_with_cidr|test_create_share_with_size_bigger_than_quota).)*$        
 
 - job:
     name: powerflex-sdc
