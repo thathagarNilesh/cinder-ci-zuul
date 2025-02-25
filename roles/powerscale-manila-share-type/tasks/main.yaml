@@ -1,5 +1,0 @@
-- name: Create PowerScale Manila share type
-  shell: |
-    bash -c "source /opt/stack/devstack/openrc admin admin && \
-    openstack share type create powerscale False && \
-    openstack share type set powerscale --extra-specs share_backend_name=powerscale snapshot_support=True"
