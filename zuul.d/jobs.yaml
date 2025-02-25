@@ -108,9 +108,7 @@
         localrc: true
         stackenv: true
         auto: true
-    pre-run:
-      - playbooks/pre-devstack.yaml
-      - playbooks/install-custom-packages.yaml
+    pre-run: playbooks/pre-devstack.yaml
     run: playbooks/run-devstack.yaml
     post-run: playbooks/post-devstack.yaml
     irrelevant-files:
@@ -463,6 +461,7 @@
               volume_use_multipath: True
       tempest_test_regex: |
         volume
+    pre-run: playbooks/install-custom-packages.yaml
 
 - job:
     name: powerstore-iscsi-cinder-tempest
