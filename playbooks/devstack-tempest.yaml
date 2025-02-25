@@ -3,15 +3,7 @@
 # avoid zuul retrying on legitimate failures.
 - hosts: all
   roles:
-    - role: install-nvme-packages
-      when: "'powerstore-nvme-tcp-cinder-tempest' in hostvars['localhost']['zuul']['job']"
-    - role: install-nfs-packages
-      when: "'powerstore-nfs-cinder-tempest' in hostvars['localhost']['zuul']['job']"
     - run-devstack
-    - role: powerscale-manila-share-type
-      when: "'powerscale-backend-manila-tempest' in hostvars['localhost']['zuul']['job']"
-    - role: powerstore-manila-share-type
-      when: "'powerstore-backend-manila-tempest' in hostvars['localhost']['zuul']['job']"
 
 # We run tests only on one node, regardless how many nodes are in the system
 - hosts: tempest

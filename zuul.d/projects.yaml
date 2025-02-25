@@ -16,7 +16,7 @@
     dell-emc-powerflex-ci-check:
       jobs:
         # - devstack-cinder-plugin-tempest-base
-        - powerflex-v4-backend-cinder-tempest:
+        - powerflex-v4-cinder-tempest:
             branches: master
 
 - project:
