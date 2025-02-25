@@ -56,9 +56,6 @@ providers:
     boot-timeout: 600
     launch-timeout: 3600
     launch-retries: 3
-    # Every day nodepool uploading new image to avoid upload issue
-    # deleting old image before upload
-    image-delete: true
     clean-floating-ips: true
     diskimages: 
       - name: nodepool-jammy
