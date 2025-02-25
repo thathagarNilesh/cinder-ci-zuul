@@ -284,7 +284,7 @@
       set the nodeset to a multi-node one.
     required-projects: &base_required-projects
       - opendev.org/openstack/tempest
-    timeout: 7200
+    timeout: 10800
     vars: &base_vars
       devstack_services:
         tempest: true
@@ -323,7 +323,6 @@
       - ^.*\.rst$
       - ^doc/.*$
       - ^tox.ini$
-    timeout: 7200
     vars:
       devstack_localrc:
         TEMPEST_PLUGINS: 'cinder-tempest-plugin'
@@ -334,11 +333,12 @@
       tempest_test_regex: |
         volume
 
-- job: 
-    name: powerflex-v4-backend-cinder-tempest
+- job:
+    name: powerflex-cinder-base
     parent: devstack-cinder-plugin-tempest-base
     description: |
-      Runs cinder tempest plugin tests with Dell PowerFlex 4.x
+      Base job for Dell PowerFlex
+    timeout: 10800
     vars:
       devstack_localrc:
         CINDER_ENABLED_BACKENDS: powerflex1,powerflex2
@@ -354,21 +354,40 @@
             validation:
               run_validation: true
             volume:
-              build_timeout: 600
               volume_size: 8
               volume_size_extend: 8
-              manage_volume_ref: source-id,%s
-              manage_snapshot_ref: source-id,%s
+              build_timeout: 300
             volume-feature-enabled:
+              manage_snapshot: False
+              manage_volume: False
               consistency_group: True
-              extend_attached_volume: True
+              backup: True
               volume_revert: True
+              multi_backend: True
+              extend_attached_volume: True
+              extend_attached_encrypted_volume: True
         post-config:
           $CINDER_CONF:
             powerflex1:
               volume_backend_name: powerflex1
             powerflex2:
-              volume_backend_name: powerflex1
+              volume_backend_name: powerflex2
+          $NOVA_CONF:
+            libvirt:
+              volume_use_multipath: True
+      tempest_test_regex: |
+          volume|^cinder_tempest_plugin
+
+
+- job:
+    name: powerflex-v4-cinder-tempest
+    parent: powerflex-cinder-base
+    description: |
+      Runs cinder tempest plugin tests with Dell PowerFlex 4.x
+    vars:
+      devstack_local_conf:
+        post-config:
+          $CINDER_CONF:
             backend_defaults:
               suppress_requests_ssl_warnings: True
               volume_driver: cinder.volume.drivers.dell_emc.powerflex.driver.PowerFlexDriver
@@ -377,11 +396,6 @@
               san_login: admin
               san_password: Notuse4per!
               powerflex_storage_pools: PD1:SP1
-          $NOVA_CONF:
-            libvirt:
-              volume_use_multipath: True
-      tempest_test_regex: |
-        volume|^cinder_tempest_plugin
     pre-run: playbooks/deploy-sdc.yaml
 
 - job:
@@ -662,7 +676,20 @@
         manila_tempest_tests.tests.api.((?!.*test_share_type_azs_share_groups_az_in_create_req|test_create_duplicate_single_host_rules|test_create_delete_access_rule_with_cidr|test_create_share_with_size_bigger_than_quota).)*$        
 
 - job:
-    name: powerflex-sdc
-    parent: dell-base
-    description: temp job to validate playbook
-    run: playbooks/deploy-sdc.yaml
+    name: powerflex-v3-cinder-tempest
+    parent: powerflex-cinder-base
+    description: |
+      Runs cinder tempest plugin tests with Dell PowerFlex 3.x
+    vars:
+      devstack_local_conf:
+        post-config:
+          $CINDER_CONF:
+            backend_defaults:
+              suppress_requests_ssl_warnings: True
+              volume_driver: cinder.volume.drivers.dell_emc.powerflex.driver.PowerFlexDriver
+              image_volume_cache_enabled: True
+              san_ip: 10.225.109.124
+              san_login: admin
+              san_password: Notuse4per!
+              powerflex_storage_pools: PD1:SP1
+    pre-run: playbooks/deploy-sdc.yaml
