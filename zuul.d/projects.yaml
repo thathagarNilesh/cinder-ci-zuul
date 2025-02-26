@@ -20,3 +20,5 @@
         #    branches: master
         - powerflex-v4-cinder-tempest:
             branches: master
+        - powerflex-v3-cinder-tempest:
+            branches: master
