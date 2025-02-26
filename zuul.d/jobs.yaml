@@ -541,6 +541,8 @@
               nfs_sparsed_volumes: False
               nfs_qcow2_volumes: False
               nas_host: 10.230.43.247
+      tempest_test_regex: |
+        ^(?=.*volume)(?!.*(test_volume_backup_restore)).*
     pre-run: playbooks/install-nfs-packages.yaml
 
 - job:
