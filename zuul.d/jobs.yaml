@@ -541,11 +541,6 @@
               nfs_sparsed_volumes: False
               nfs_qcow2_volumes: False
               nas_host: 10.230.43.247
-          $NOVA_CONF:
-            libvirt:
-              volume_use_multipath: True
-      tempest_test_regex: |
-        volume
     pre-run: playbooks/install-nfs-packages.yaml
 
 - job:
