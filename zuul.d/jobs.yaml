@@ -382,27 +382,10 @@
     description: |
       Runs cinder tempest plugin tests with Dell PowerFlex 4.x
     vars:
-      mdm_ip: 10.228.225.158
-      devstack_local_conf:
-        post-config:
-          $CINDER_CONF:
-            backend_defaults:
-              suppress_requests_ssl_warnings: True
-              volume_driver: cinder.volume.drivers.dell_emc.powerflex.driver.PowerFlexDriver
-              image_volume_cache_enabled: True
-              san_ip: 10.228.225.154
-              san_login: admin
-              san_password: 'Dellam123!'
-              powerflex_storage_pools: OpenstackPD:OpenstackSP1
-    pre-run: playbooks/deploy-sdc.yaml
-
-- job:
-    name: powerflex-v3-cinder-tempest
-    parent: powerflex-cinder-base
-    description: |
-      Runs cinder tempest plugin tests with Dell PowerFlex 3.x
-    vars:
-      mdm_ip: 10.228.225.225
+      mdm_ip: 10.228.225.225,10.228.225.227
+      powerflex_sdc_deb: EMC-ScaleIO-sdc-4.5-3000.128.Ubuntu.22.04.x86_64.deb
+      powerflex1_san_password: '#1Danger0us'
+      powerflex2_san_password: '#1Danger0us'
       devstack_local_conf:
         post-config:
           $CINDER_CONF:
@@ -413,5 +396,28 @@
               san_ip: 10.228.225.213
               san_login: admin
               san_password: '#1Danger0us'
+              powerflex_storage_pools: OpenstackPD:OpenstackSP1
+    pre-run: playbooks/deploy-sdc.yaml
+
+- job:
+    name: powerflex-v3-cinder-tempest
+    parent: powerflex-cinder-base
+    description: |
+      Runs cinder tempest plugin tests with Dell PowerFlex 3.x
+    vars:
+      mdm_ip: 10.228.225.157,10.228.225.158
+      powerflex_sdc_deb: EMC-ScaleIO-sdc-3.6-4000.124.Ubuntu.22.04.x86_64.deb
+      powerflex1_san_password: 'Dellam123!'
+      powerflex2_san_password: 'Dellam123!'
+      devstack_local_conf:
+        post-config:
+          $CINDER_CONF:
+            backend_defaults:
+              suppress_requests_ssl_warnings: True
+              volume_driver: cinder.volume.drivers.dell_emc.powerflex.driver.PowerFlexDriver
+              image_volume_cache_enabled: True
+              san_ip: 10.228.225.154
+              san_login: admin
+              san_password: 'Dellam123!'
               powerflex_storage_pools: OpenstackPD:OpenstackSP1
     pre-run: playbooks/deploy-sdc.yaml
