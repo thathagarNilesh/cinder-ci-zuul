@@ -26,3 +26,4 @@ iptables:
 redhat-rpm-config:
 redhat-lsb-core:
 gnupg2:
+multipath-tools:

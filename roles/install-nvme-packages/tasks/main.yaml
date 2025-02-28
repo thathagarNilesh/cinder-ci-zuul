@@ -1,0 +1,15 @@
+  - name: Install NVMe Packages
+    modprobe:
+      name: "{{ item }}"
+      state: present
+    loop:
+      - nvme
+      - nvme-tcp
+    become: yes
+
+  - name: Install NVMe CLI Package
+    apt:
+      name: nvme-cli
+      state: present
+      update_cache: yes
+    become: yes

@@ -16,9 +16,27 @@
     dell-emc-powerflex-ci-check:
       jobs:
         # - devstack-cinder-plugin-tempest-base
-        #        - powerflex-v4-backend-cinder-tempest:
-        #    branches: master
         - powerflex-v4-cinder-tempest:
             branches: master
         - powerflex-v3-cinder-tempest:
+            branches: master
+
+- project:
+    name: opendev/ci-sandbox
+    dell-emc-powerscale-ci-check:
+      jobs:
+        - powerscale-manila-tempest:
+            branches: master
+
+- project:
+    name: opendev/ci-sandbox
+    dell-emc-powerstore-ci-check:
+      jobs:
+        - powerstore-manila-tempest:
+            branches: master
+        - powerstore-iscsi-cinder-tempest:
+            branches: master
+        - powerstore-nvme-tcp-cinder-tempest:
+            branches: master
+        - powerstore-nfs-cinder-tempest:
             branches: master
