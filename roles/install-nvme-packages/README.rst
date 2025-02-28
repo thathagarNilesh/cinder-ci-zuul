@@ -1,3 +1,4 @@
 Installing NVMe Packages
 
-This packages are required for PowerStore,PowerMax,PowerFlex NVMe.
+This packages are required for PowerStore,
+PowerMax,PowerFlex product line.
