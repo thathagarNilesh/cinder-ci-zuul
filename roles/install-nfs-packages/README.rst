@@ -1,3 +1,3 @@
 Installing NFS Packages
 
-This packages are required for PowerStore NFS
+These packages are required for PowerStore product line.
