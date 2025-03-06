@@ -1,0 +1,17 @@
+  - name: Upload Dell NFS package
+    copy:
+      src: "dellfcopy_1.3-1_amd64.deb"
+      dest: "/tmp/dellfcopy_1.3-1_amd64.deb"
+    become: yes
+
+  - name: Install Dell NFS package
+    apt:
+      deb: "/tmp/dellfcopy_1.3-1_amd64.deb"
+    become: yes
+
+  - name: Install NFS Packages
+    apt:
+      name: nfs-common
+      state: present
+      update_cache: yes
+    become: yes

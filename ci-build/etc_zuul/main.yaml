@@ -31,6 +31,8 @@
           - openstack/os-test-images
           - openstack/os-brick
           - openstack/cinder-tempest-plugin
+          - openstack/manila-tempest-plugin
+          - openstack/manila
       openstack.gerrit:
         untrusted-projects:
           - opendev/ci-sandbox

@@ -97,3 +97,36 @@
       openstack.gerrit: {}
     failure:
       openstack.gerrit: {}
+
+- pipeline:
+    name: dell-emc-powerscale-ci-check
+    description: |
+      Runs tests and uploads results upstream for Dell EMC PowerScale backend
+    manager: independent
+    footer-message: |
+      For 3rd party CI contact info: https://wiki.openstack.org/wiki/ThirdPartySystems/DellEMC_PowerScale_CI
+    require:
+      openstack.gerrit:
+        current-patchset: True
+    trigger:
+      openstack.gerrit:
+        - event: change-restored
+          branch: master
+        - event: comment-added
+          branch: master
+          comment: ^\s*recheck(( (?:bug|lp)[\s#:]*(\d+))|( no bug))\s*$
+        - event: comment-added
+          branch: master
+          comment: run-DellEMC PowerScale CI$
+        - event: comment-added
+          branch: master
+          approval:
+            - verified: 1
+    success-message: |
+      Build succeeded (check pipeline).
+    failure-message: |
+      Build failed (check pipeline).
+    success:
+      openstack.gerrit: {}
+    failure:
+      openstack.gerrit: {}
