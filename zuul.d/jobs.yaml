@@ -11,7 +11,6 @@
     nodeset:
       nodes:
         - name: controller
-#          label: ubuntu-jammy
           label: nodepool-jammy
       groups:
         - name: tempest
@@ -340,18 +339,23 @@
       Base job for Dell PowerFlex
     timeout: 10800
     vars:
+      zuul_copy_output:
+        /opt/emc/scaleio/openstack/connector.conf: logs
+        /etc/emc/scaleio/drv_cfg.txt: logs
       devstack_localrc:
-          CINDER_ENABLED_BACKENDS: powerflex1,powerflex2
-          TEMPEST_EXTEND_ATTACHED_VOLUME: true
-          TEMPEST_VOLUME_DRIVER: EMC
-          TEMPEST_VOLUME_VENDOR: 'Dell EMC'
-          TEMPEST_STORAGE_PROTOCOL: scaleio
-          ENABLE_VOLUME_MULTIATTACH: true
+        CINDER_ENABLED_BACKENDS: powerflex1,powerflex2
+        TEMPEST_EXTEND_ATTACHED_VOLUME: true
+        TEMPEST_VOLUME_DRIVER: EMC
+        TEMPEST_VOLUME_VENDOR: 'Dell EMC'
+        TEMPEST_STORAGE_PROTOCOL: scaleio
+        ENABLE_VOLUME_MULTIATTACH: true
       devstack_local_conf:
         test-config:
           $TEMPEST_CONFIG:
             validation:
               run_validation: true
+            compute:
+              ssh_timeout: 600
             volume:
               volume_size: 8
               volume_size_extend: 8
@@ -374,8 +378,11 @@
           $NOVA_CONF:
             libvirt:
               volume_use_multipath: True
+          $GLANCE_API_CONF:
+            glance_store:
+              default_store: file
       tempest_test_regex: |
-          volume|^cinder_tempest_plugin
+        volume|^cinder_tempest_plugin
 
 
 - job:
@@ -384,7 +391,33 @@
     description: |
       Runs cinder tempest plugin tests with Dell PowerFlex 4.x
     vars:
-      mdm_ip: 10.228.225.158
+      mdm_ip: 10.228.225.225,10.228.225.227
+      powerflex_sdc_deb: EMC-ScaleIO-sdc-4.5-3000.128.Ubuntu.22.04.x86_64.deb
+      powerflex1_san_password: '#1Danger0us'
+      powerflex2_san_password: '#1Danger0us'
+      devstack_local_conf:
+        post-config:
+          $CINDER_CONF:
+            backend_defaults:
+              suppress_requests_ssl_warnings: True
+              volume_driver: cinder.volume.drivers.dell_emc.powerflex.driver.PowerFlexDriver
+              image_volume_cache_enabled: True
+              san_ip: 10.228.225.148
+              san_login: admin
+              san_password: '#1Danger0us'
+              powerflex_storage_pools: OpenstackPD:OpenstackSP1
+    pre-run: playbooks/deploy-sdc.yaml
+
+- job:
+    name: powerflex-v3-cinder-tempest
+    parent: powerflex-cinder-base
+    description: |
+      Runs cinder tempest plugin tests with Dell PowerFlex 3.x
+    vars:
+      mdm_ip: 10.228.225.157,10.228.225.158
+      powerflex_sdc_deb: EMC-ScaleIO-sdc-3.6-4000.124.Ubuntu.22.04.x86_64.deb
+      powerflex1_san_password: 'Dellam123!'
+      powerflex2_san_password: 'Dellam123!'
       devstack_local_conf:
         post-config:
           $CINDER_CONF:
@@ -395,26 +428,6 @@
               san_ip: 10.228.225.154
               san_login: admin
               san_password: 'Dellam123!'
-              powerflex_storage_pools: OpenstackPD:OpenstackSP1
-    pre-run: playbooks/deploy-sdc.yaml
-
-- job:
-    name: powerflex-v3-cinder-tempest
-    parent: powerflex-cinder-base
-    description: |
-      Runs cinder tempest plugin tests with Dell PowerFlex 3.x
-    vars:
-      mdm_ip: 10.228.225.225
-      devstack_local_conf:
-        post-config:
-          $CINDER_CONF:
-            backend_defaults:
-              suppress_requests_ssl_warnings: True
-              volume_driver: cinder.volume.drivers.dell_emc.powerflex.driver.PowerFlexDriver
-              image_volume_cache_enabled: True
-              san_ip: 10.228.225.213
-              san_login: admin
-              san_password: '#1Danger0us'
               powerflex_storage_pools: OpenstackPD:OpenstackSP1
     pre-run: playbooks/deploy-sdc.yaml
 
