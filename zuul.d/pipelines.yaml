@@ -117,7 +117,7 @@
           comment: ^\s*recheck(( (?:bug|lp)[\s#:]*(\d+))|( no bug))\s*$
         - event: comment-added
           branch: master
-          comment: run-DellEMC Powerscale CI$
+          comment: run-DellEMC PowerScale CI$
         - event: comment-added
           branch: master
           approval:
