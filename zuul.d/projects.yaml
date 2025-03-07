@@ -19,4 +19,6 @@
             branches: master
         - powerflex-v3-cinder-tempest:
             branches: master
+        - powerflex-nvme-cinder-tempest:
+            branches: master
 

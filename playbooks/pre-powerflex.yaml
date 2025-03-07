@@ -1,0 +1,6 @@
+- hosts: all
+  roles:
+    - role: deploy-powerflex-sdc
+      when: "'powerflex-nvme-cinder-tempest' not in hostvars['localhost']['zuul']['job']"
+    - configure-powerflex-connector
+
