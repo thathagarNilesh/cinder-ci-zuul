@@ -1,0 +1,5 @@
+powerflex1_cinder_backend: powerflexnvme1
+powerflex2_cinder_backend: powerflexnvme2
+powerflex1_san_password: Dellam123!
+powerflex2_san_password: Dellam123!
+
