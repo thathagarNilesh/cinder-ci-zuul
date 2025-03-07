@@ -11,7 +11,8 @@
     nodeset:
       nodes:
         - name: controller
-          label: nodepool-jammy
+          #          label: ubuntu-jammy
+          label: nodepool-jammy-1
       groups:
         - name: tempest
           nodes:
@@ -183,7 +184,6 @@
       - opendev.org/openstack/swift
       - opendev.org/openstack/os-test-images
       - opendev.org/openstack/devstack
-      - opendev.org/openstack/manila
     timeout: 10800
     vars:
       # based on observation of the integrated gate
@@ -317,8 +317,7 @@
       This job doesn't configure any backend but install the cinder plugin for tempest.
     required-projects:
       - openstack/cinder-tempest-plugin
-    # Define the anchor for irrelevant-files once
-    irrelevant-files: &irrelevant_files
+    irrelevant-files: &irrelevant-files
       - ^.*\.rst$
       - ^doc/.*$
       - ^tox.ini$
@@ -570,7 +569,6 @@
     required-projects:
       - openstack/manila-tempest-plugin
     # Instead of redefining the anchor, refer to the previously defined anchor.
-    irrelevant-files: *irrelevant_files
     timeout: 7200
     vars:
       devstack_localrc:
@@ -702,4 +700,4 @@
               enabled_share_protocols: NFS,CIFS
               share_name_template: CI-%s
       tempest_test_regex: |
-        manila_tempest_tests.tests.api.((?!.*test_create_share_with_size_bigger_than_quota).)*$        
+        manila_tempest_tests.tests.api.((?!.*test_create_share_with_size_bigger_than_quota).)*$     
