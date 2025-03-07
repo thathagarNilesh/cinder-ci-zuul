@@ -6,10 +6,9 @@
 
 - project:
     name: opendev/ci-sandbox
-    dell-emc-powerscale-ci-check:
+    dell-emc-powermax-ci-check:
       jobs:
-        - powerscale-manila-tempest:
-            branches: master
+        - noop
 
 - project:
     name: openstack/cinder
@@ -20,5 +19,12 @@
         - powerflex-v3-cinder-tempest:
             branches: master
         - powerflex-nvme-cinder-tempest:
+            branches: master
+
+- project:
+    name: openstack/manila
+    dell-emc-powerscale-ci-check:
+      jobs:
+        - powerscale-manila-tempest:
             branches: master
 
