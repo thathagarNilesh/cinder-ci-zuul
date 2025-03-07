@@ -8,7 +8,8 @@
     name: opendev/ci-sandbox
     dell-emc-powermax-ci-check:
       jobs:
-        - noop
+        - powermax-iscsi-cinder-tempest:
+            branches: master
 
 - project:
     name: openstack/cinder
@@ -27,4 +28,5 @@
       jobs:
         - powerscale-manila-tempest:
             branches: master
+
 
