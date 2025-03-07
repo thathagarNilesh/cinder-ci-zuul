@@ -405,7 +405,7 @@
               san_login: admin
               san_password: '#1Danger0us'
               powerflex_storage_pools: OpenstackPD:OpenstackSP1
-    pre-run: playbooks/deploy-sdc.yaml
+    pre-run: playbooks/pre-powerflex.yaml
 
 - job:
     name: powerflex-v3-cinder-tempest
@@ -428,7 +428,34 @@
               san_login: admin
               san_password: 'Dellam123!'
               powerflex_storage_pools: OpenstackPD:OpenstackSP1
-    pre-run: playbooks/deploy-sdc.yaml
+    pre-run: playbooks/pre-powerflex.yaml
+
+- job:
+    name: powerflex-nvme-cinder-tempest
+    parent: powerflex-cinder-base
+    description: |
+      Runs cinder tempest plugin tests with Dell PowerFlex 4.x with NVMeTCP support
+    vars:
+      powerflex1_backend_name: 'powerflexnvme1'
+      powerflex1_backend_name: 'powerflexnvme2'
+      powerflex1_san_password: 'Notuse4per!'
+      powerflex2_san_password: 'Notuse4per!'
+      devstack_local_conf:
+        post-config:
+          $CINDER_CONF:
+            backend_defaults:
+              suppress_requests_ssl_warnings: True
+              volume_driver: cinder.volume.drivers.dell_emc.powerflex.driver.PowerFlexNVMeDriver
+              image_volume_cache_enabled: True
+              san_ip: 10.225.109.34
+              san_login: admin2
+              san_password: '#1Danger0us'
+              powerflex_storage_pools: PD1:SP1
+              num_volume_device_scan_tries: 180
+              powerflex_unmap_volume_before_deletion: True
+              powerflex_allow_non_padded_volumes: True
+    pre-run: playbooks/pre-powerflex.yaml
+
 
 - job:
     name: powerstore-cinder-base
