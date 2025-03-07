@@ -29,11 +29,23 @@
             branches: master
 
 - project:
-    name: opendev/ci-sandbox
+    name: openstack/manila
+    dell-emc-powerscale-ci-check:
+      jobs:
+        - powerscale-manila-tempest:
+            branches: master
+
+- project:
+    name: openstack/manila
     dell-emc-powerstore-ci-check:
       jobs:
         - powerstore-manila-tempest:
             branches: master
+
+- project:
+    name: openstack/cinder
+    dell-emc-powerstore-ci-check:
+      jobs:
         - powerstore-iscsi-cinder-tempest:
             branches: master
         - powerstore-nvme-tcp-cinder-tempest:
