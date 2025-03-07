@@ -331,6 +331,7 @@
       tempest_test_regex: |
         volume
 
+# ---- PowerFlex jobs definition section for cinder
 - job:
     name: powerflex-cinder-base
     parent: devstack-cinder-plugin-tempest-base
@@ -381,7 +382,6 @@
               default_store: file
       tempest_test_regex: |
         volume|^cinder_tempest_plugin
-
 
 - job:
     name: powerflex-v4-cinder-tempest
@@ -453,7 +453,7 @@
               powerflex_allow_non_padded_volumes: True
     pre-run: playbooks/pre-powerflex.yaml
 
-
+# ---- PowerStore jobs definition section for cinder
 - job:
     name: powerstore-cinder-base
     parent: devstack-cinder-plugin-tempest-base
@@ -650,6 +650,7 @@
       tempest_test_regex: |
         manila_tempest_tests.tests.api
 
+# ---- PowerScale jobs definition section for Manila
 - job:
     name: powerscale-manila-tempest
     parent: devstack-manila-plugin-tempest-base
@@ -689,6 +690,7 @@
       tempest_test_regex: |
         manila_tempest_tests.tests.api.((?!.*test_create_share_with_size_bigger_than_quota).)*$ 
 
+# ---- PowerStore jobs definition section for Manila
 - job:
     name: powerstore-manila-tempest
     parent: devstack-manila-plugin-tempest-base
