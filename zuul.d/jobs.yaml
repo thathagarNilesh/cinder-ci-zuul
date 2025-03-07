@@ -336,7 +336,6 @@
     parent: devstack-cinder-plugin-tempest-base
     description: |
       Base job for Dell PowerFlex
-    timeout: 10800
     vars:
       zuul_copy_output:
         /opt/emc/scaleio/openstack/connector.conf: logs
@@ -594,7 +593,6 @@
     required-projects:
       - openstack/manila-tempest-plugin
     # Instead of redefining the anchor, refer to the previously defined anchor.
-    timeout: 7200
     vars:
       devstack_localrc:
         TEMPEST_PLUGINS: 'manila-tempest-plugin'
