@@ -19,6 +19,6 @@
             branches: master
         - powerflex-v3-cinder-tempest:
             branches: master
-        - powerflex-nvme-cinder-tempest:
+        - powerflex-nvme-tcp-cinder-tempest:
             branches: master
 

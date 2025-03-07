@@ -431,13 +431,11 @@
     pre-run: playbooks/pre-powerflex.yaml
 
 - job:
-    name: powerflex-nvme-cinder-tempest
+    name: powerflex-nvme-tcp-cinder-tempest
     parent: powerflex-cinder-base
     description: |
       Runs cinder tempest plugin tests with Dell PowerFlex 4.x with NVMeTCP support
     vars:
-      powerflex1_backend_name: 'powerflexnvme1'
-      powerflex1_backend_name: 'powerflexnvme2'
       powerflex1_san_password: 'Notuse4per!'
       powerflex2_san_password: 'Notuse4per!'
       devstack_local_conf:
