@@ -578,12 +578,13 @@
         TEMPEST_VOLUME_DRIVER: EMC
         TEMPEST_VOLUME_VENDOR: 'Dell EMC'
         MANILA_SERVICE_IMAGE_URL: file:///openstack/cache/files/manila-service-image.qcow2
+        MANILA_CONFIGURE_DEFAULT_TYPES: True
       devstack_local_conf:
         test-config:
           $TEMPEST_CONFIG:
             share:
               run_ipv6_tests: False
-              capability_create_share_from_snapshot_support: False
+              capability_create_share_from_snapshot_support: True
               run_mount_snapshot_tests: False
               run_migration_with_preserve_snapshots_tests: False
               run_driver_assisted_migration_tests: False
@@ -637,14 +638,14 @@
       devstack_localrc:
         TEMPEST_STORAGE_PROTOCOL: NFS
         CINDER_ENABLED_BACKENDS: NFS:isilon
+        MANILA_DHSS_FALSE_SHARE_TYPE_EXTRA_SPECS: 'share_backend_name=powerscale snapshot_support=True create_share_from_snapshot_support=True'
       devstack_local_conf:
         test-config:
           $TEMPEST_CONFIG:
             share:
-              default_share_type_name: powerscale
+              default_share_type_name: dhss_false
               backend_names: powerscale
-              capability_create_share_from_snapshot_support: True
-              run_quota_tests: False
+              username_for_user_rules: root
               run_revert_to_snapshot_tests: False
         post-config:
           $MANILA_CONF:
@@ -654,17 +655,18 @@
               emc_share_backend: isilon
               share_backend_name: powerscale
               enabled_share_protocols: NFS,CIFS
-              emc_nas_server:  10.205.232.128
+              emc_nas_server:  10.245.106.161
               emc_nas_server_port: 8080
               emc_nas_login:  root
               emc_nas_password:  a
               emc_nas_root_dir: /ifs/manila
+              emc_ssl_cert_verify: False
             DEFAULT:
               enabled_share_backends: powerscale
               enabled_share_protocols: NFS,CIFS
               share_name_template: CI-%s
       tempest_test_regex: |
-        manila_tempest_tests.tests.api.((?!.*test_share_type_azs_share_groups_az_in_create_req|test_create_duplicate_single_host_rules|test_create_delete_access_rule_with_cidr|test_create_share_with_size_bigger_than_quota).)*$
+        manila_tempest_tests.tests.api.((?!.*test_create_share_with_size_bigger_than_quota).)*$ 
 
 - job:
     name: powerstore-manila-tempest
@@ -675,12 +677,14 @@
       devstack_localrc:
         TEMPEST_STORAGE_PROTOCOL: NFS
         CINDER_ENABLED_BACKENDS: NFS:powerstore
+        MANILA_DHSS_FALSE_SHARE_TYPE_EXTRA_SPECS: 'share_backend_name=london snapshot_support=True create_share_from_snapshot_support=True revert_to_snapshot_support=True create_share_from_snapshot_support=True'
       devstack_local_conf:
         test-config:
           $TEMPEST_CONFIG:
             share:
-              default_share_type_name: default
+              default_share_type_name: dhss_false
               backend_names: london
+              run_mount_snapshot_tests: False
         post-config:
           $MANILA_CONF:
             london:
@@ -698,4 +702,4 @@
               enabled_share_protocols: NFS,CIFS
               share_name_template: CI-%s
       tempest_test_regex: |
-        manila_tempest_tests.tests.api.((?!.*test_share_type_azs_share_groups_az_in_create_req|test_create_duplicate_single_host_rules|test_create_delete_access_rule_with_cidr|test_create_share_with_size_bigger_than_quota).)*$        
+        manila_tempest_tests.tests.api.((?!.*test_create_share_with_size_bigger_than_quota).)*$        
