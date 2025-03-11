@@ -16,7 +16,9 @@
         - name: tempest
           nodes:
             - controller
-    
+    secrets:
+      - name: site_logs
+        secret: site_logs
 
 - job:
     name: devstack-base
@@ -364,12 +366,12 @@
       devstack_local_conf:
         test-config:
           $TEMPEST_CONFIG:
+            validation:
+              ssh_timeout: 600
             volume:
               volume_size: 8
               volume_size_extend: 8
               build_timeout: 600
-            compute:
-              ssh_timeout: 600
         post-config:
           $CINDER_CONF:
             DEFAULT:
@@ -763,7 +765,7 @@
               san_login: smc
               san_password: smc
               powermax_srp: SRP_1
-              powermax_array: 000120001602
+              powermax_array: '000120001602'
               powermax_port_groups: [Openstack-PG]
 
 - job:
