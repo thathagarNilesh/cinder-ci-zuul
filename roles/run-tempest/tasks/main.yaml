@@ -131,3 +131,12 @@
   become: true
   become_user: tempest
   environment: "{{ tempest_tox_environment }}"
+
+- name: Rerun failed tests
+  when: tempest_run_result.failed
+  become: true
+  become_user: tempest
+  command: |
+    bash -c "source /opt/stack/tempest/.tox/tempest/bin/activate &&
+    cd /opt/stack/tempest &&
+    tempest run --combine --serial --load-list <(stestr failing --list)"
