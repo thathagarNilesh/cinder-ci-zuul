@@ -5,7 +5,23 @@
     - merge-output-to-logs
 
 - hosts: localhost
+  pre_tasks:
+    - name: Return log URL to Zuul
+      zuul_return:
+        data:
+          zuul:
+            #    log_url: "https://elab-os-logsrv.delllabs.net/t/openstack/build/{{ zuul.build }}"
+            log_url: "http://10.228.225.15/{{ zuul.build }}"
+  gather_facts: False
   roles:
     - generate-zuul-manifest
+    - role: add-fileserver
+      fileserver: "{{ site_logs }}"
+
+- hosts: 10.228.225.15
+  gather_facts: False
+  roles:
     - role: upload-logs
-      zuul_log_url: "http://10.228.225.12:8000"
+      zuul_log_url:  "http://10.228.225.15/"
+      zuul_log_compress: false
+      zuul_logserver_root: "{{ site_logs.path }}"
