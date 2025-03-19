@@ -8,6 +8,7 @@
       - preferred_username: admin
 - tenant:
     name: openstack
+    max-job-timeout: 21600
     admin-rules:
         - tenant-group
         - admin-user
