@@ -5,14 +5,29 @@
         - noop
 
 - project:
-    name: opendev/ci-sandbox
-    dell-emc-powermax-ci-check:
+    name: openstack/manila
+    dell-emc-powerscale-ci-check:
       jobs:
-        - powermax-iscsi-cinder-tempest:
+        - powerscale-manila-tempest:
+            branches: master
+    dell-emc-powerstore-ci-check:
+      jobs:
+        - powerstore-manila-tempest:
             branches: master
 
 - project:
     name: openstack/cinder
+    dell-emc-powermax-ci-check:
+      jobs:
+        - powermax-iscsi-cinder-tempest:
+            branches: master
+        - powermax-nvme-tcp-cinder-tempest:
+            branches: master
+        - powermax-fc-cinder-tempest:
+            branches: master
+    dell-emc-unity-ci-check:
+      jobs:
+        - noop
     dell-emc-powerflex-ci-check:
       jobs:
         - powerflex-v4-cinder-tempest:
@@ -21,12 +36,12 @@
             branches: master
         - powerflex-nvme-tcp-cinder-tempest:
             branches: master
-
-- project:
-    name: openstack/manila
-    dell-emc-powerscale-ci-check:
+    dell-emc-powerstore-ci-check:
       jobs:
-        - powerscale-manila-tempest:
+        - powerstore-nfs-cinder-tempest:
             branches: master
-
+        - powerstore-nvme-tcp-cinder-tempest:
+            branches: master
+        - powerstore-iscsi-cinder-tempest:
+            branches: master
 
