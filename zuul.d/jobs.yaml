@@ -11,7 +11,7 @@
     nodeset:
       nodes:
         - name: controller
-          label: nodepool-jammy
+          label: nodepool-jammy-1
       groups:
         - name: tempest
           nodes:
@@ -185,7 +185,6 @@
       - opendev.org/openstack/swift
       - opendev.org/openstack/os-test-images
       - opendev.org/openstack/devstack
-    timeout: 10800
     vars:
       # based on observation of the integrated gate
       # tempest-integrated-compute was only using ~1.7GB of swap
@@ -284,7 +283,6 @@
       set the nodeset to a multi-node one.
     required-projects: &base_required-projects
       - opendev.org/openstack/tempest
-    timeout: 10800
     vars: &base_vars
       devstack_services:
         tempest: true
@@ -443,6 +441,8 @@
     vars:
       powerflex1_san_password: 'Notuse4per!'
       powerflex2_san_password: 'Notuse4per!'
+      devstack_localrc:
+        TEMPEST_STORAGE_PROTOCOL: "nvmeof"
       devstack_local_conf:
         post-config:
           $CINDER_CONF:
@@ -452,12 +452,14 @@
               image_volume_cache_enabled: True
               san_ip: 10.225.109.34
               san_login: admin2
-              san_password: '#1Danger0us'
+              san_password: 'Notuse4per!'
               powerflex_storage_pools: PD1:SP1
               num_volume_device_scan_tries: 180
               powerflex_unmap_volume_before_deletion: True
               powerflex_allow_non_padded_volumes: True
-    pre-run: playbooks/pre-powerflex.yaml
+    pre-run: 
+      - playbooks/pre-powerflex.yaml
+      - playbooks/install-nvme-packages.yaml
 
 # ---- PowerStore jobs definition section for cinder
 - job:
@@ -695,6 +697,7 @@
             share:
               default_share_type_name: dhss_false
               backend_names: london
+
         post-config:
           $MANILA_CONF:
             london:
@@ -703,10 +706,10 @@
               emc_share_backend: powerstore
               share_backend_name: london
               enabled_share_protocols: NFS,CIFS
-              dell_nas_backend_host: 10.230.24.76
-              dell_nas_server: Openstack_NAS
+              dell_nas_backend_host: 10.228.224.228
+              dell_nas_server: OpenStack_701
               dell_nas_login: admin
-              dell_nas_password: Braveoctopus045!
+              dell_nas_password: Password123!
             DEFAULT:
               enabled_share_backends: london
               enabled_share_protocols: NFS,CIFS
@@ -720,7 +723,9 @@
     parent: devstack-cinder-plugin-tempest-base
     description: |
       Base job for Dell PowerMax
+    timeout: 21600
     vars:
+      tempest_concurrency: 6
       devstack_localrc:
         CINDER_ENABLED_BACKENDS: powermax1,powermax2
         TEMPEST_VOLUME_DRIVER: EMC
@@ -770,12 +775,12 @@
               image_volume_cache_enabled: True
               driver_ssl_cert_verify: False
               driver_use_ssl: False
-              san_ip: 10.225.104.36
+              san_ip: 10.228.237.40
               san_login: smc
               san_password: smc
               powermax_service_level: Diamond
               powermax_srp: SRP_1
-              powermax_array: '000120001602'
+              powermax_array: '000197904538'
               powermax_port_groups: '[Openstack-PG]'
               rest_api_connect_timeout: 900
               rest_api_read_timeout: 900
