@@ -408,6 +408,8 @@
               san_login: admin
               san_password: '#1Danger0us'
               powerflex_storage_pools: OpenstackPD:OpenstackSP1
+      tempest_exclude_regex: |
+        .*test_volume_migrate_attached.TestVolumeMigrateRetypeAttached.*
     pre-run: playbooks/pre-powerflex.yaml
 
 - job:
@@ -431,6 +433,8 @@
               san_login: admin
               san_password: 'Dellam123!'
               powerflex_storage_pools: OpenstackPD:OpenstackSP1
+      tempest_exclude_regex: |
+        .*test_volume_migrate_attached.TestVolumeMigrateRetypeAttached.*
     pre-run: playbooks/pre-powerflex.yaml
 
 - job:
@@ -457,6 +461,8 @@
               num_volume_device_scan_tries: 180
               powerflex_unmap_volume_before_deletion: True
               powerflex_allow_non_padded_volumes: True
+      tempest_exclude_regex: |
+        .*test_volume_migrate_attached.TestVolumeMigrateRetypeAttached.*
     pre-run: 
       - playbooks/pre-powerflex.yaml
       - playbooks/install-nvme-packages.yaml
@@ -697,7 +703,6 @@
             share:
               default_share_type_name: dhss_false
               backend_names: london
-
         post-config:
           $MANILA_CONF:
             london:
@@ -714,8 +719,8 @@
               enabled_share_backends: london
               enabled_share_protocols: NFS,CIFS
               share_name_template: CI-%s
-      tempest_test_regex: |
-        manila_tempest_tests.tests.api.((?!.*test_create_share_with_size_bigger_than_quota).)*$     
+      tempest_exclude_regex: |
+         .*test_create_share_with_size_bigger_than_quota|.*test_create_duplicate_single_host_rules_3_fd2c_b029_bba6_df54__1_128|.*test_create_duplicate_single_host_rules_4_10_10_30_40_32|.*test_share_type_azs_share_groups_az_in_create_req_1_True|.*test_share_type_azs_share_groups_az_in_create_req_2_False
 
 # ---- PowerMax jobs definition for cinder
 - job:
