@@ -1,0 +1,19 @@
+- name: Look for subunit2html command
+  script: "find-subunit2html.sh {{ zuul_work_dir }}"
+  failed_when: false
+  register: find_subunit2html_output
+
+- name: Define subunit_html_command fact
+  when:
+    - find_subunit2html_output.rc == 0
+    - find_subunit2html_output.stdout
+  set_fact:
+    # We use the trim filter here on all stdout because for some reason
+    # we occasionally get the command listed with a blank line prefix.
+    # This should clean that up.
+    subunit_html_command: "{{ find_subunit2html_output.stdout | trim }}"
+
+- name: Emit a debug line so we can search logstash for fallback hits
+  debug:
+    msg: "subunit2html found in: {{ subunit_html_command }}"
+  when: subunit_html_command is defined
