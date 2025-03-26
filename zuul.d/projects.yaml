@@ -27,7 +27,10 @@
             branches: master
     dell-emc-unity-ci-check:
       jobs:
-        - noop
+        - unity-iscsi-cinder-tempest:
+            branches: master
+        - unity-fc-cinder-tempest:
+            branches: master
     dell-emc-powerflex-ci-check:
       jobs:
         - powerflex-v4-cinder-tempest:

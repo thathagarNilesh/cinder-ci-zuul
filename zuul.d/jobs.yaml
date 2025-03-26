@@ -842,3 +842,67 @@
               rest_api_connect_timeout: 900
               rest_api_read_timeout: 900
     pre-run: playbooks/install-nvme-packages.yaml
+# ---- Unity jobs definition for cinder
+- job:
+    name: unity-cinder-base
+    parent: devstack-cinder-plugin-tempest-base
+    description: |
+      Base job for Dell Unity
+    vars:
+      devstack_localrc:
+        CINDER_ENABLED_BACKENDS: unity1,unity2
+        TEMPEST_VOLUME_DRIVER: EMC
+        TEMPEST_VOLUME_VENDOR: 'Dell EMC'
+        TEMPEST_EXTEND_ATTACHED_VOLUME: true
+        ENABLE_VOLUME_MULTIATTACH: true
+      devstack_local_conf:
+        post-config:
+          $CINDER_CONF:
+            DEFAULT:
+              use_multipath_for_image_xfer: true
+            unity1:
+              volume_backend_name: unity1
+            unity2:
+              volume_backend_name: unity2
+          $NOVA_CONF:
+            libvirt:
+              volume_use_multipath: True
+      tempest_test_regex: |
+        volume|^cinder_tempest_plugin
+    pre-run: playbooks/install-storops.yaml
+- job:
+    name: unity-iscsi-cinder-tempest
+    parent: unity-cinder-base
+    description: |
+      Runs cinder tempest plugin tests with Dell Unity on iSCSI
+    vars:
+      devstack_localrc:
+        TEMPEST_STORAGE_PROTOCOL: iSCSI
+      devstack_local_conf:
+        post-config:
+          $CINDER_CONF:
+            backend_defaults:
+              suppress_requests_ssl_warnings: True
+              volume_driver: cinder.volume.drivers.dell_emc.unity.Driver
+              san_ip: 10.230.24.51
+              san_login: admin
+              san_password: Password123!
+              storage_protocol: iSCSI
+- job:
+    name: unity-fc-cinder-tempest
+    parent: unity-cinder-base
+    description: |
+      Runs cinder tempest plugin tests with Dell Unity on FC
+    vars:
+      devstack_localrc:
+        TEMPEST_STORAGE_PROTOCOL: FC
+      devstack_local_conf:
+        post-config:
+          $CINDER_CONF:
+            backend_defaults:
+              suppress_requests_ssl_warnings: True
+              volume_driver: cinder.volume.drivers.dell_emc.unity.Driver
+              san_ip: 10.230.24.51
+              san_login: admin
+              san_password: Password123!
+              storage_protocol: FC
