@@ -1,0 +1,5 @@
+- name: Install storops
+  pip:
+    name: storops
+    state: present
+  become: yes
