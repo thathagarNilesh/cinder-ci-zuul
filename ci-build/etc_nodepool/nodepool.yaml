@@ -17,8 +17,11 @@ zookeeper-tls:
 
 labels:
   - name: nodepool-jammy
-    min-ready: 3
-    max-ready-age: 86400
+    min-ready: 1
+  - name: nodepool-jammy-iscsi
+    min-ready: 1
+  - name: nodepool-jammy-fc
+    min-ready: 0
 
 diskimages:
   - name: nodepool-jammy
@@ -46,7 +49,7 @@ diskimages:
       DIB_GRUB_TIMEOUT: '0'
       DIB_SHOW_IMAGE_USAGE: '1'
       ZUUL_USER_SSH_PUBLIC_KEY: |
-        ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIISH2OxNgu283A3nVDqFk5GyL25m20TKhkLBFUZwBJJ0 root@84af400082f9
+        ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN3Dwxl4wSNJo/mHBz5zt1GeLVW3IpO/vA0BPzMA9gTd root@104ed3bed237
 
 
 providers:
@@ -63,7 +66,6 @@ providers:
     pools:
       - name: dell-openstack-ci
         auto-floating-ip: true
-        max-servers: 4
         security-groups: 
           - nodepool-secgroup
         networks:
@@ -72,4 +74,14 @@ providers:
           - name: nodepool-jammy
             diskimage: nodepool-jammy
             flavor-name: m1.large
+          - name: nodepool-jammy-fc
+            diskimage: nodepool-jammy
+            flavor-name: m1.large.pci
+          - name: nodepool-jammy-iscsi
+            diskimage: nodepool-jammy
+            flavor-name: m1.large
+            networks:
+              - private-pmax
+              - nodepool
+
 

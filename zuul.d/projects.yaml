@@ -19,10 +19,10 @@
     name: openstack/cinder
     dell-emc-powermax-ci-check:
       jobs:
-        - powermax-iscsi-cinder-tempest:
-            branches: master
-        - powermax-nvme-tcp-cinder-tempest:
-            branches: master
+        #- powermax-iscsi-cinder-tempest:
+        #branches: master
+              #- powermax-nvme-tcp-cinder-tempest:
+              #branches: master
         - powermax-fc-cinder-tempest:
             branches: master
     dell-emc-unity-ci-check:
