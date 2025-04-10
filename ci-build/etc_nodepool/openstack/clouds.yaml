@@ -1,7 +1,14 @@
 clouds:
   ci-cloud:
+    networks:
+    - name: nodepool
+      nat_destination: true
+    - name: public
+      nat_source: true
+    - name: private-pmax
+      routes_externally: false
     auth: 
-      auth_url: http://10.225.110.64/identity
+      auth_url: http://10.228.225.63/identity
       project_name: nodepool
       username: nodepool
       password: dangerous

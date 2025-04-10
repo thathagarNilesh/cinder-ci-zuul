@@ -361,6 +361,7 @@
         TEMPEST_VOLUME_VENDOR: 'Dell EMC'
         TEMPEST_STORAGE_PROTOCOL: scaleio
         ENABLE_VOLUME_MULTIATTACH: true
+        GLANCE_LIMIT_IMAGE_SIZE_TOTAL: 10000
       devstack_local_conf:
         test-config:
           $TEMPEST_CONFIG:
@@ -561,10 +562,10 @@
               max_over_subscription_ratio: 20
             powerstore1:
               volume_backend_name: powerstore1
-              nas_share_path: '/Openstack_NFS_1'
+              nas_share_path: '/openstack-nfs1'
             powerstore2:
               volume_backend_name: powerstore2
-              nas_share_path: '/Openstack_NFS_2'
+              nas_share_path: '/openstack-nfs2'
             backend_defaults:
               volume_driver: cinder.volume.drivers.dell_emc.powerstore.nfs.PowerStoreNFSDriver
               nfs_snapshot_support: True
@@ -767,6 +768,14 @@
     parent: powermax-cinder-base
     description: |
       Runs cinder tempest plugin tests with Dell PowerMax on iSCSI
+    nodeset:
+      nodes:
+        - name: controller
+          label: nodepool-jammy-iscsi
+      groups:
+        - name: tempest
+          nodes:
+            - controller
     vars:
       devstack_localrc:
         TEMPEST_STORAGE_PROTOCOL: iSCSI
@@ -780,13 +789,13 @@
               image_volume_cache_enabled: True
               driver_ssl_cert_verify: False
               driver_use_ssl: False
-              san_ip: 10.228.237.40
+              san_ip: 10.228.103.112
               san_login: smc
               san_password: smc
               powermax_service_level: Diamond
               powermax_srp: SRP_1
               powermax_array: '000197904538'
-              powermax_port_groups: '[Openstack-PG]'
+              powermax_port_groups: '[Openstack-CI-ISCSI]'
               rest_api_connect_timeout: 900
               rest_api_read_timeout: 900
 
@@ -795,6 +804,14 @@
     parent: powermax-cinder-base
     description: |
       Runs cinder tempest plugin tests with Dell PowerMax on FC
+    nodeset:
+      nodes:
+        - name: controller
+          label: nodepool-jammy-fc
+      groups:
+        - name: tempest
+          nodes:
+            - controller      
     vars:
       devstack_localrc:
         TEMPEST_STORAGE_PROTOCOL: FC
@@ -804,15 +821,19 @@
             backend_defaults:
               suppress_requests_ssl_warnings: True
               volume_driver: cinder.volume.drivers.dell_emc.powermax.fc.PowerMaxFCDriver
+              num_volume_device_scan_tries: 10
               image_volume_cache_enabled: True
               driver_ssl_cert_verify: False
               driver_use_ssl: False
-              san_ip:
-              san_password:
+              san_ip: 10.228.103.112
+              san_login: smc
+              san_password: smc
               powermax_service_level: Diamond
               powermax_srp: SRP_1
-              powermax_array: 000197904538
-              powermax_port_groups: [PMAX_JWDN4_FC_OpenStack]
+              powermax_array: '000197904538'
+              powermax_port_groups: '[Openstack-CI-FC]'
+              rest_api_connect_timeout: 900
+              rest_api_read_timeout: 900
 
 - job:
     name: powermax-nvme-tcp-cinder-tempest

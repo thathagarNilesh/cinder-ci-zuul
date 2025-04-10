@@ -126,7 +126,7 @@ services:
       - "certs:/var/certs:z"
     ports:
       - "8005:8005"
-    command: "sh -c '/var/playbooks/wait-to-start-certs.sh && exec nodepool-launcher -f'"
+    command: "sh -c '/var/playbooks/wait-to-start-certs.sh && exec nodepool-launcher -f -d'"
     networks:
       - zuul
   logs:

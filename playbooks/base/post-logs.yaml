@@ -11,7 +11,7 @@
         data:
           zuul:
             #    log_url: "https://elab-os-logsrv.delllabs.net/t/openstack/build/{{ zuul.build }}"
-            log_url: "http://10.228.225.15/{{ zuul.build }}"
+            log_url: "http://{{ site_logs.fqdn }}/{{ zuul.build }}"
   gather_facts: False
   roles:
     - generate-zuul-manifest
@@ -22,6 +22,6 @@
   gather_facts: False
   roles:
     - role: upload-logs
-      zuul_log_url:  "http://10.228.225.15/"
+      zuul_log_url:  "http://{{ site_logs.fqdn }}/"
       zuul_log_compress: false
       zuul_logserver_root: "{{ site_logs.path }}"
