@@ -877,6 +877,10 @@
         TEMPEST_EXTEND_ATTACHED_VOLUME: true
         ENABLE_VOLUME_MULTIATTACH: true
       devstack_local_conf:
+        test-config:
+          $TEMPEST_CONFIG:
+            volume:
+              build_timeout: 600
         post-config:
           $CINDER_CONF:
             DEFAULT:
