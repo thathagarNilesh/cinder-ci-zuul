@@ -341,7 +341,7 @@
               extend_attached_encrypted_volume: True
       tempest_concurrency: 4
       tox_envlist: all
-      tempest_test_regex: |
+      tempest_test_regex: >-
         volume
 
 # ---- PowerFlex jobs definition section for cinder
@@ -385,8 +385,6 @@
           $GLANCE_API_CONF:
             glance_store:
               default_store: file
-      tempest_test_regex: |
-        volume|^cinder_tempest_plugin
 
 - job:
     name: powerflex-v4-cinder-tempest
@@ -495,8 +493,6 @@
           $NOVA_CONF:
             libvirt:
               volume_use_multipath: True
-      tempest_test_regex: >-
-        volume
 
 - job:
     name: powerstore-iscsi-cinder-tempest
@@ -674,7 +670,7 @@
         manila-tempest-plugin: https://opendev.org/openstack/manila-tempest-plugin
       tempest_concurrency: 4
       tox_envlist: all
-      tempest_test_regex: |
+      tempest_test_regex: >-
         manila_tempest_tests.tests.api
 
 # ---- PowerScale jobs definition section for Manila
@@ -791,8 +787,6 @@
           $NOVA_CONF:
             libvirt:
               volume_use_multipath: True
-      tempest_test_regex: |
-        volume|^cinder_tempest_plugin 
 
 - job:
     name: powermax-iscsi-cinder-tempest
@@ -923,8 +917,6 @@
           $NOVA_CONF:
             libvirt:
               volume_use_multipath: True
-      tempest_test_regex: |
-        volume|^cinder_tempest_plugin
     pre-run: playbooks/install-storops.yaml
 - job:
     name: unity-iscsi-cinder-tempest
