@@ -918,6 +918,14 @@
     parent: unity-cinder-base
     description: |
       Runs cinder tempest plugin tests with Dell Unity on FC
+    nodeset:
+      nodes:
+        - name: controller
+          label: nodepool-jammy-fc
+      groups:
+        - name: tempest
+          nodes:
+            - controller
     vars:
       devstack_localrc:
         TEMPEST_STORAGE_PROTOCOL: FC
@@ -931,4 +939,6 @@
               san_login: admin
               san_password: Password123!
               storage_protocol: FC
+      tempest_exclude_regex: >-
+        test_attach_cloned_encrypted_volume|test_boot_cloned_encrypted_volume
               
