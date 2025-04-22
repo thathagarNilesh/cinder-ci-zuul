@@ -341,7 +341,7 @@
               extend_attached_encrypted_volume: True
       tempest_concurrency: 4
       tox_envlist: all
-      tempest_test_regex: |
+      tempest_test_regex: >-
         volume
 
 # ---- PowerFlex jobs definition section for cinder
@@ -385,8 +385,6 @@
           $GLANCE_API_CONF:
             glance_store:
               default_store: file
-      tempest_test_regex: |
-        volume|^cinder_tempest_plugin
 
 - job:
     name: powerflex-v4-cinder-tempest
@@ -480,6 +478,7 @@
         TEMPEST_VOLUME_DRIVER: EMC
         TEMPEST_VOLUME_VENDOR: 'Dell EMC'
         ENABLE_VOLUME_MULTIATTACH: true
+        TEMPEST_EXTEND_ATTACHED_VOLUME: true
       devstack_local_conf:
         post-config:
           $CINDER_CONF:
@@ -494,8 +493,6 @@
           $NOVA_CONF:
             libvirt:
               volume_use_multipath: True
-      tempest_test_regex: |
-        volume|^cinder_tempest_plugin
 
 - job:
     name: powerstore-iscsi-cinder-tempest
@@ -504,18 +501,46 @@
       Runs cinder tempest plugin tests with Dell PowerStore ISCSI
     vars:
       devstack_localrc:
-        TEMPEST_EXTEND_ATTACHED_VOLUME: true
         TEMPEST_STORAGE_PROTOCOL: iSCSI
       devstack_local_conf:
         post-config:
           $CINDER_CONF:
             backend_defaults:
               volume_driver: cinder.volume.drivers.dell_emc.powerstore.driver.PowerStoreDriver
-              san_ip: 10.230.24.76
+              san_ip: 10.230.24.33
               san_login: admin
               san_password: Braveoctopus045!
               suppress_requests_ssl_warnings: True
               storage_protocol: iSCSI
+
+- job:
+    name: powerstore-fc-cinder-tempest
+    parent: powerstore-cinder-base
+    description: |
+      Runs cinder tempest plugin tests with Dell PowerStore FC
+    nodeset:
+      nodes:
+        - name: controller
+          label: nodepool-jammy-fc
+      groups:
+        - name: tempest
+          nodes:
+            - controller
+    vars:
+      devstack_localrc:
+        TEMPEST_STORAGE_PROTOCOL: FC
+      devstack_local_conf:
+        post-config:
+          $CINDER_CONF:
+            backend_defaults:
+              volume_driver: cinder.volume.drivers.dell_emc.powerstore.driver.PowerStoreDriver
+              san_ip: 10.230.24.33
+              san_login: admin
+              san_password: Braveoctopus045!
+              suppress_requests_ssl_warnings: True
+              storage_protocol: FC
+      tempest_exclude_regex: >-
+        test_attach_cloned_encrypted_volume|test_boot_cloned_encrypted_volume
 
 - job:
     name: powerstore-nvme-tcp-cinder-tempest
@@ -524,14 +549,13 @@
       Runs cinder tempest plugin tests with Dell PowerStore NVME-TCP
     vars:
       devstack_localrc:
-        TEMPEST_EXTEND_ATTACHED_VOLUME: true
         TEMPEST_STORAGE_PROTOCOL: NVMe
       devstack_local_conf:
         post-config:
           $CINDER_CONF:
             backend_defaults:
               volume_driver: cinder.volume.drivers.dell_emc.powerstore.driver.PowerStoreDriver
-              san_ip: 10.230.24.76
+              san_ip: 10.230.24.33
               san_login: admin
               san_password: Braveoctopus045!
               suppress_requests_ssl_warnings: True
@@ -551,9 +575,12 @@
         test-config:
           $TEMPEST_CONFIG:
             volume-feature-enabled:
+              extend_attached_volume: False
               extend_attached_encrypted_volume: False
               consistency_group: False
               snapshot: True
+            compute-feature-enabled:
+              attach_encrypted_volume: False
         post-config:
           $CINDER_CONF:
             DEFAULT:
@@ -562,10 +589,10 @@
               max_over_subscription_ratio: 20
             powerstore1:
               volume_backend_name: powerstore1
-              nas_share_path: '/openstack-nfs1'
+              nas_share_path: '/Openstack_NFS_1'
             powerstore2:
               volume_backend_name: powerstore2
-              nas_share_path: '/openstack-nfs2'
+              nas_share_path: '/Openstack_NFS_2'
             backend_defaults:
               volume_driver: cinder.volume.drivers.dell_emc.powerstore.nfs.PowerStoreNFSDriver
               nfs_snapshot_support: True
@@ -574,7 +601,7 @@
               suppress_requests_ssl_warnings: True
               nfs_sparsed_volumes: False
               nfs_qcow2_volumes: False
-              nas_host: 10.230.43.247
+              nas_host: 10.230.43.249
       tempest_exclude_regex: >-
         test_volume_backup_restore
     pre-run: playbooks/install-nfs-packages.yaml
@@ -643,7 +670,7 @@
         manila-tempest-plugin: https://opendev.org/openstack/manila-tempest-plugin
       tempest_concurrency: 4
       tox_envlist: all
-      tempest_test_regex: |
+      tempest_test_regex: >-
         manila_tempest_tests.tests.api
 
 # ---- PowerScale jobs definition section for Manila
@@ -760,8 +787,6 @@
           $NOVA_CONF:
             libvirt:
               volume_use_multipath: True
-      tempest_test_regex: |
-        volume|^cinder_tempest_plugin 
 
 - job:
     name: powermax-iscsi-cinder-tempest
@@ -892,8 +917,6 @@
           $NOVA_CONF:
             libvirt:
               volume_use_multipath: True
-      tempest_test_regex: |
-        volume|^cinder_tempest_plugin
     pre-run: playbooks/install-storops.yaml
 - job:
     name: unity-iscsi-cinder-tempest

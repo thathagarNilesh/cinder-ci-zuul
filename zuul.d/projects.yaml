@@ -41,10 +41,12 @@
             branches: master
     dell-emc-powerstore-ci-check:
       jobs:
-        - powerstore-nfs-cinder-tempest:
+        - powerstore-iscsi-cinder-tempest:
+            branches: master
+        - powerstore-fc-cinder-tempest:
             branches: master
         - powerstore-nvme-tcp-cinder-tempest:
             branches: master
-        - powerstore-iscsi-cinder-tempest:
+        - powerstore-nfs-cinder-tempest:
             branches: master
 
