@@ -539,8 +539,7 @@
               san_password: Braveoctopus045!
               suppress_requests_ssl_warnings: True
               storage_protocol: FC
-      tempest_exclude_regex: >-
-        test_attach_cloned_encrypted_volume|test_boot_cloned_encrypted_volume
+              use_multipath_for_image_xfer: true
 
 - job:
     name: powerstore-nvme-tcp-cinder-tempest
